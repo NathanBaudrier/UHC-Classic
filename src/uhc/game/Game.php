@@ -2,26 +2,33 @@
 
 namespace uhc\game;
 
-use hoku\core\utils\Time;
 use uhc\game\scenarios\ScenarioManager;
 use uhc\game\settings\Border;
 use uhc\game\settings\Teams;
+use uhc\Main;
+use uhc\tasks\UpdateTimeTask;
 use uhc\UPlayer;
+use uhc\utils\Time;
 
 class Game {
 
+    private Main $main;
     private bool $started = false;
+    private int $limitPlayers = 50;
     private Time $duration;
     /**
      * @var UPlayer[]
      */
     private array $players = [];
+    private int $maxPlayers = 30;
     private Border $border;
     private Teams $teams;
     private ScenarioManager $scenarios;
     private Time $pvpTime;
+    private array $starterKit = [];
 
     public function __construct() {
+        $this->main = Main::getInstance();
         $this->duration = new Time();
         $this->border = new Border();
         $this->teams = new Teams();
@@ -34,7 +41,17 @@ class Game {
     }
 
     public function start() : void {
+        $this->started = true;
+
+        $this->main->getScheduler()->scheduleRepeatingTask(new UpdateTimeTask($this), 20);
         //TODO
+        if($this->teams->areRandom()) {
+            //Do random team
+        }
+    }
+
+    public function getLimitPlayers() : int {
+        return $this->limitPlayers;
     }
 
     public function getDuration() : Time {
@@ -54,7 +71,15 @@ class Game {
     }
 
     public function removePlayer(UPlayer $player) : void {
-        $key = array_search($player, $this->players);
+        unset($this->players[array_search($player, $this->players)]);
+    }
+
+    public function getMaxPlayers() : int {
+        return $this->maxPlayers;
+    }
+
+    public function setMaxPlayers(int $maxPlayers) : void {
+        $this->maxPlayers = $maxPlayers;
     }
 
     public function getBorder() : Border {
@@ -71,5 +96,18 @@ class Game {
 
     public function getPvpTime() : Time {
         return $this->pvpTime;
+    }
+
+    private function doRandomTeam() : void {
+        $max = $this->teams->getAmount();
+        //TODO
+    }
+
+    public function getStarterKit() : array {
+        return $this->starterKit;
+    }
+
+    public function setStarterKit(array $starterKit) : void {
+        $this->starterKit = $starterKit;
     }
 }

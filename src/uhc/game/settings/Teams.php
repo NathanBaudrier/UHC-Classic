@@ -7,12 +7,16 @@ class Teams {
     private int $amount = 0;
     private bool $random = false;
 
-    public function areEnabled() : bool {
-        return $this->amount > 0;
+    public function getAmount() : int {
+        return $this->amount;
     }
 
-    public function isRandom() : bool {
+    public function areRandom() : bool {
         return $this->random;
+    }
+
+    public function areEnabled() : bool {
+        return $this->amount > 0;
     }
 
     public function enableRandom() : void {

@@ -1,0 +1,5 @@
+name: UHC Classic
+main: uhc\Main
+author: NathanPasDuTout
+version: 1.0.0
+api: [5.0.0]

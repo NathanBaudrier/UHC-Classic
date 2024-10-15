@@ -9,6 +9,10 @@ class ScenarioManager implements ScenarioIds {
      */
     private array $scenarios = [];
 
+    public function __construct() {
+        $this->init();
+    }
+
     public function init() : void {
         $this->scenarios[] = new Scenario(self::FINAL_HEAL_ID, "Final Heal", "");
         $this->scenarios[] = new Scenario(self::CAT_EYES_ID, "Cat Eyes", "");

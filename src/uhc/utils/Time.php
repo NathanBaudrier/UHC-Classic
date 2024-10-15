@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace hoku\core\utils;
+namespace uhc\utils;
 
 final class Time {
 
@@ -56,7 +56,7 @@ final class Time {
     }
 
     //to remake
-    public function getTimeFormat() : string {
+    public function getFormat() : string {
         $text = "";
         if ($this->hours > 0) $text .= $this->hours . "h ";
         if ($this->minutes > 0) $text .= $this->minutes . "m ";
