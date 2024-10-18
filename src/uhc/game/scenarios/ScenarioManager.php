@@ -69,6 +69,21 @@ class ScenarioManager implements ScenarioIds {
 
         return $enabledScenarios;
     }
+
+    /**
+     * Return sorted scenarios (those that are enabled and then those that are disabled)
+     * @return Scenario[]
+     */
+    public function getSorted() : array {
+        $enabled  = $this->getEnabled();
+        $disabled = $this->getAll();
+
+        foreach($disabled as $scenario) {
+            if(in_array($scenario, $enabled)) unset($disabled[array_search($scenario, $disabled)]);
+        }
+
+        return array_merge($enabled, $disabled);
+    }
     
     public function getById(int $id) : ?Scenario {
         foreach($this->scenarios as $scenario) {
