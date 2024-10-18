@@ -7,6 +7,7 @@ use pocketmine\network\mcpe\protocol\SetScorePacket;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use pocketmine\player\Player;
 use uhc\game\team\Team;
+use uhc\items\ConfigItem;
 use uhc\libs\scoreboard\Scoreboard;
 
 class UPlayer extends Player {
@@ -23,7 +24,9 @@ class UPlayer extends Player {
 
     public function sendHostInventory() : void {
         $this->getInventory()->clearAll();
-        $this->getInventory()->setContents([]);
+        $this->getInventory()->setContents([
+            4 => new ConfigItem()
+        ]);
     }
 
     public function sendGuessInventory() : void {
