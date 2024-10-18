@@ -46,7 +46,7 @@ class PlayerListeners implements Listener {
                 $scoreboard->addLine(0, "+--------------+");
                 $scoreboard->addLine(1, "Timer : " . $this->game->getDuration()->getFormat());
                 $scoreboard->addLine(2, "Border : ");
-                $scoreboard->addLine(3, "Pvp : " /*TODO*/ );
+                $scoreboard->addLine(3, "Pvp : " /*TODO*/);
                 if($this->game->getTeams()->areEnabled()) $scoreboard->addLine(4, "Team : " . $player->getTeam()->getName());
                 $scoreboard->addLine(5, "----------------");
             }

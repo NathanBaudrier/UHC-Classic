@@ -15,6 +15,7 @@ use pocketmine\item\Shovel;
 use pocketmine\item\VanillaItems;
 use Random\RandomException;
 use uhc\game\Game;
+use uhc\listeners\custom\UPlayerDeathEvent;
 
 class ScenarioListeners implements Listener {
 
@@ -54,11 +55,29 @@ class ScenarioListeners implements Listener {
             $scenarios = $this->game->getScenarios();
 
             switch (true) {
-                case $scenarios->getById($scenarios::TIMBER_ID)->isEnabled():
+                case $scenarios->getById($scenarios::VANILLA_PLUS_ID)->isEnabled():
+                    $random = random_int(0, 100);
+
                     if($block->getTypeId() == BlockTypeIds::OAK_LEAVES || $block->getTypeId() == BlockTypeIds::DARK_OAK_LEAVES) {
-                        $random = random_int(1, 100);
                         if($random <= 20) $event->setDrops([VanillaItems::APPLE()]);
+                    } else if($block->getTypeId() == BlockTypeIds::GRAVEL) {
+                        if($random <= 20) $event->setDrops([VanillaItems::FLINT()]);
                     }
+
+                case $scenarios->getById($scenarios::TIMBER_ID):
+                    $x = $block->getPosition()->getX();
+                    $y = $block->getPosition()->getY();
+            }
+        }
+    }
+
+    public function onDeath(UPlayerDeathEvent $event) : void {
+        $player = $event->getPlayer();
+        $killer = $event->getKiller();
+        $scenarios = $this->game->getScenarios();
+
+        if($killer !== null) {
+            if($scenarios->getById($scenarios::NO_CLEAN_UP_ID)->isEnabled()) {
             }
         }
     }
