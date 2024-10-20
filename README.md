@@ -25,7 +25,7 @@
 - [x] Double or Nothing 
 - [ ] Blocked 
 - [ ] Bench Blitz
-- [ ] Damage Cycle 
+- [x] Damage Cycle 
 - [ ] Blood Fusion
 - [ ] Sky High 
 - [ ] Vein Miner 
@@ -41,4 +41,4 @@
 - [ ] Mystery Teams 
 - [ ] Rock, Paper, Scissors 
 - [ ] Best PVE 
-- [ ] Cripple 
+- [x] Cripple 

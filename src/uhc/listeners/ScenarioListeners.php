@@ -10,6 +10,8 @@ use pocketmine\block\GoldOre;
 use pocketmine\block\IronOre;
 use pocketmine\block\LapisOre;
 use pocketmine\block\RedstoneOre;
+use pocketmine\entity\effect\EffectInstance;
+use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
@@ -29,6 +31,7 @@ use Random\RandomException;
 use uhc\game\Game;
 use uhc\listeners\custom\NewDamageCycleEvent;
 use uhc\listeners\custom\UPlayerDeathEvent;
+use uhc\UPlayer;
 use uhc\utils\scenarios\DamageCycle;
 
 class ScenarioListeners implements Listener {
@@ -155,10 +158,17 @@ class ScenarioListeners implements Listener {
         $player = $event->getEntity();
         $scenarios = $this->game->getScenarios();
 
-        if($this->game->hasStarted()) {
-            if($scenarios->getById($scenarios::DAMAGE_CYCLE_ID)->isEnabled()) {
-                if($event->getFinalDamage() < $player->getHealth()) {
-                    if($event->getCause() == $this->game->getDamageCycle()->getCause()) $player->kill();
+        if($this->game->hasStarted() && $player instanceof UPlayer) {
+            if($event->getFinalDamage() < $player->getHealth()) {
+                switch (true) {
+                    case $scenarios->getById($scenarios::DAMAGE_CYCLE_ID)->isEnabled():
+                        if($event->getCause() == $this->game->getDamageCycle()->getCause()) $player->kill();
+                        break;
+
+                    case $scenarios->getById($scenarios::CRIPPLE_ID)->isEnabled():
+                        if($event->getCause() == EntityDamageEvent::CAUSE_FALL) {
+                            $player->getEffects()->add(new EffectInstance(VanillaEffects::SLOWNESS(), 20*90, 0, false));
+                        }
                 }
             }
         }
