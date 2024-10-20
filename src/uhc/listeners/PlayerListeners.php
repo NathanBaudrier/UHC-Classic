@@ -29,6 +29,7 @@ class PlayerListeners implements Listener {
 
     public function onJoin(PlayerJoinEvent $event) : void {
         $player = $event->getPlayer();
+        $game = $this->game;
 
         if($player instanceof UPlayer) {
 
@@ -42,6 +43,12 @@ class PlayerListeners implements Listener {
                 $scoreboard->addLine(2, "Host : "/* . $this->game->getHost()*/);
                 $scoreboard->addLine(3, "-----------");
             } else {
+                if($game->isInGame($player)) {
+                    $player->reconnectToGame();
+                } else {
+                    //Spec
+                }
+
                 $scoreboard = new Scoreboard("UHC Classic", "game_scoreboard");
                 $scoreboard->addLine(0, "+--------------+");
                 $scoreboard->addLine(1, "Timer : " . $this->game->getDuration()->getFormat());
@@ -60,10 +67,13 @@ class PlayerListeners implements Listener {
 
     public function onQuit(PlayerQuitEvent $event) : void {
         $player = $event->getPlayer();
+        $game = $this->game;
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() && $this->game->isInGame($player)) {
-                $this->game->removePlayer($player);
+            if($game->hasStarted()) {
+                $player->disconnectFromGame();
+            } else {
+                $game->removePlayer($player);
             }
         }
     }

@@ -10,11 +10,14 @@ use uhc\game\team\Team;
 use uhc\items\ConfigItem;
 use uhc\libs\scoreboard\Scoreboard;
 use uhc\listeners\custom\UPlayerDeathEvent;
+use uhc\tasks\DisconnectTask;
 
 class UPlayer extends Player {
 
     private ?Scoreboard $scoreboard = null;
     private ?Team $team = null;
+
+    private ?DisconnectTask $disconnectTask = null;
 
     public function isOp() : bool {
         return $this->getServer()->isOp($this->getName());
@@ -95,5 +98,14 @@ class UPlayer extends Player {
 
     public function kill() : void {
         (new UPlayerDeathEvent($this))->call();
+    }
+
+    public function disconnectFromGame() : void {
+        Main::getInstance()->getScheduler()->scheduleDelayedTask(($task = new DisconnectTask($this)), 60*10*20);
+        $this->disconnectTask = $task;
+    }
+
+    public function reconnectToGame() : void {
+        $this->disconnectTask?->getHandler()->cancel();
     }
 }
