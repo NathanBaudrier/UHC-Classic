@@ -2,7 +2,7 @@
 
 ### Scenario todo list :
 
-- [ ] Final Heal 
+- [x] Final Heal 
 - [ ] Cat Eyes 
 - [x] Vanilla + 
 - [ ] Timber
