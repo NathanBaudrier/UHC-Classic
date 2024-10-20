@@ -72,7 +72,7 @@ class PlayerListeners implements Listener {
         $player = $event->getTransaction()->getSource();
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && $player->isOp()) {
+            if(!$this->game->hasStarted() /* && !$player->isHost()*/ || $player->isOp()) {
                 $event->cancel();
             }
         }
