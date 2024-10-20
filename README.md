@@ -10,7 +10,7 @@
 - [x] Blood Enchant 
 - [ ] Blood Fusion 
 - [ ] Bookception 
-- [ ] Anonymous 
+- [x] Anonymous 
 - [ ] Assault and Battery 
 - [ ] Auto Break 
 - [ ] Barebones 

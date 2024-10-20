@@ -2,6 +2,7 @@
 
 namespace uhc\game;
 
+use pocketmine\utils\TextFormat;
 use uhc\game\scenarios\ScenarioManager;
 use uhc\game\settings\Border;
 use uhc\game\settings\Teams;
@@ -50,6 +51,13 @@ class Game {
         //TODO
         if($this->teams->areRandom()) {
             //Do random team
+        }
+
+        if($this->scenarios->getById($this->scenarios::ANONYMOUS_ID)->isEnabled()) {
+            foreach($this->players as $player) {
+                $player->setDisplayName(TextFormat::OBFUSCATED . "MONKEY");
+                //$player->setSkin(); TODO
+            }
         }
     }
 

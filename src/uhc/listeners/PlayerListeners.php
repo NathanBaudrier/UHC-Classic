@@ -2,6 +2,7 @@
 
 namespace uhc\listeners;
 
+use pocketmine\entity\Skin;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -12,6 +13,7 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\Server;
+use pocketmine\utils\TextFormat;
 use uhc\game\Game;
 use uhc\game\scenarios\ScenarioIds;
 use uhc\libs\scoreboard\Scoreboard;
@@ -45,6 +47,11 @@ class PlayerListeners implements Listener {
             } else {
                 if($game->isInGame($player)) {
                     $player->reconnectToGame();
+
+                    if($game->getScenarios()->getById($game->getScenarios()::ANONYMOUS_ID)->isEnabled()) {
+                        $player->setDisplayName(TextFormat::OBFUSCATED . "MONKEY");
+                        //$player->setSkin(); TODO
+                    }
                 } else {
                     //Spec
                 }
