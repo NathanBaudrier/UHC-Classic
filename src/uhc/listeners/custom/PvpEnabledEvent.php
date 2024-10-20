@@ -2,7 +2,7 @@
 
 namespace uhc\listeners\custom;
 
-use hoku\core\utils\Time;
+use uhc\utils\Time;
 use pocketmine\event\Event;
 
 class PvpEnabledEvent extends Event {
