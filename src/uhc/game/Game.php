@@ -8,6 +8,7 @@ use uhc\game\settings\Teams;
 use uhc\Main;
 use uhc\tasks\UpdateTimeTask;
 use uhc\UPlayer;
+use uhc\utils\scenarios\DamageCycle;
 use uhc\utils\Time;
 
 class Game {
@@ -26,6 +27,8 @@ class Game {
     private ScenarioManager $scenarios;
     private Time $pvpTime;
     private array $starterKit = [];
+
+    private ?DamageCycle $damageCycle = null;
 
     public function __construct() {
         $this->main = Main::getInstance();
@@ -109,5 +112,13 @@ class Game {
 
     public function setStarterKit(array $starterKit) : void {
         $this->starterKit = $starterKit;
+    }
+
+    public function getDamageCycle() : ?DamageCycle {
+        return $this->damageCycle;
+    }
+
+    public function setDamageCycle(DamageCycle $damageCycle) : void {
+        $this->damageCycle = $damageCycle;
     }
 }

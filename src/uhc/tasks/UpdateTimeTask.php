@@ -4,6 +4,7 @@ namespace uhc\tasks;
 
 use pocketmine\scheduler\Task;
 use uhc\game\Game;
+use uhc\listeners\custom\NewDamageCycleEvent;
 use uhc\listeners\custom\PvpEnabledEvent;
 
 class UpdateTimeTask extends Task {
@@ -15,13 +16,21 @@ class UpdateTimeTask extends Task {
     }
 
     public function onRun() : void {
-        if($this->game->hasStarted()) {
-            if($this->game->getPvpTime()->equals($this->game->getDuration())) {
-                $ev = new PvpEnabledEvent($this->game->getPvpTime());
+        $game = $this->game;
+
+        if($game->hasStarted()) {
+            if($game->getPvpTime()->equals($game->getDuration())) {
+                $ev = new PvpEnabledEvent($game->getPvpTime());
             }
 
-            $this->game->getDuration()->addSeconds(1);
-            $this->game->getDuration()->update();
+            if($game->getScenarios()->getById($game->getScenarios()::DAMAGE_CYCLE_ID)->isEnabled()) {
+                if($game->getDuration()->getMinutes() % 5 == 0) {
+                    (new NewDamageCycleEvent($game->getDamageCycle()))->call();
+                }
+            }
+
+            $game->getDuration()->addSeconds(1);
+            $game->getDuration()->update();
         }
     }
 }

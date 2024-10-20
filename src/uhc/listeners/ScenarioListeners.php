@@ -23,9 +23,13 @@ use pocketmine\item\Hoe;
 use pocketmine\item\Pickaxe;
 use pocketmine\item\Shovel;
 use pocketmine\item\VanillaItems;
+use pocketmine\Server;
+use pocketmine\utils\TextFormat;
 use Random\RandomException;
 use uhc\game\Game;
+use uhc\listeners\custom\NewDamageCycleEvent;
 use uhc\listeners\custom\UPlayerDeathEvent;
+use uhc\utils\scenarios\DamageCycle;
 
 class ScenarioListeners implements Listener {
 
@@ -144,6 +148,33 @@ class ScenarioListeners implements Listener {
             if($scenarios->getById($scenarios::BLOOD_ENCHANT_ID)->isEnabled()) {
                 $player->attack(new EntityDamageEvent($player, EntityDamageEvent::CAUSE_ENTITY_ATTACK, 0.5));
             }
+        }
+    }
+
+    public function onDamage(EntityDamageEvent $event) : void {
+        $player = $event->getEntity();
+        $scenarios = $this->game->getScenarios();
+
+        if($this->game->hasStarted()) {
+            if($scenarios->getById($scenarios::DAMAGE_CYCLE_ID)->isEnabled()) {
+                if($event->getFinalDamage() < $player->getHealth()) {
+                    if($event->getCause() == $this->game->getDamageCycle()->getCause()) $player->kill();
+                }
+            }
+        }
+    }
+
+    public function onDamageCycle(NewDamageCycleEvent $event) : void {
+        $game = $this->game;
+
+        $game->setDamageCycle(DamageCycle::generateNew());
+        Server::getInstance()->broadcastMessage(
+            TextFormat::WHITE . "[" . TextFormat::YELLOW . "DamageCycle" . TextFormat::WHITE . "] " . TextFormat::BOLD . $game->getDamageCycle()->getName() . "\n" .
+            $game->getDamageCycle()->getDescription()
+        );
+
+        if($event->getLastCycle() != null) {
+            Server::getInstance()->broadcastMessage("(" . $game->getDamageCycle()->getDeaths() . " joueurs sont mort à cause du cycle précédent.)");
         }
     }
 }
