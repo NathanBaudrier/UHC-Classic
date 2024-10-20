@@ -124,10 +124,12 @@ class ScenarioListeners implements Listener {
         $scenarios = $this->game->getScenarios();
 
         if($this->game->hasStarted()) {
-            if($killer !== null) {
-                if($scenarios->getById($scenarios::NO_CLEAN_UP_ID)->isEnabled()) {
-                    $killer->setHealth($killer->getHealth() / 2);
-                }
+            switch (true) {
+                case $scenarios->getById($scenarios::NO_CLEAN_UP_ID)->isEnabled():
+                    $killer?->setHealth($killer->getHealth() / 2);
+
+                case $scenarios->getById($scenarios::FAST_GATEWAY_ID)->isEnabled():
+                    $killer?->getEffects()->add(new EffectInstance(VanillaEffects::SPEED(), 60*20, 0, false));
             }
         }
     }

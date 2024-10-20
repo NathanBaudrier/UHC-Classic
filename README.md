@@ -20,7 +20,7 @@
 - [ ] Blood Fusion
 - [ ] Time Bomb
 - [x] Cut Clean 
-- [ ] Fast Getaway 
+- [x] Fast Getaway 
 - [ ] Long Shot 
 - [x] Double or Nothing 
 - [ ] Blocked 
