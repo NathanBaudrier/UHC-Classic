@@ -19,7 +19,7 @@
 - [x] No Clean Up 
 - [ ] Blood Fusion
 - [ ] Time Bomb
-- [ ] Cut Clean 
+- [x] Cut Clean 
 - [ ] Fast Getaway 
 - [ ] Long Shot 
 - [ ] Double or Nothing 

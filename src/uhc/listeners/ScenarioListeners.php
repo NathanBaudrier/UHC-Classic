@@ -3,6 +3,8 @@
 namespace uhc\listeners;
 
 use pocketmine\block\BlockTypeIds;
+use pocketmine\block\GoldOre;
+use pocketmine\block\IronOre;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener;
@@ -65,6 +67,22 @@ class ScenarioListeners implements Listener {
                     }
 
                 case $scenarios->getById($scenarios::TIMBER_ID):
+                    break;
+
+                case $scenarios->getById($scenarios::CUT_CLEAN_ID)->isEnabled():
+                    if($block instanceof IronOre) {
+                        $event->setDrops([VanillaItems::IRON_INGOT()]);
+                        $event->setXpDropAmount(rand(1, 4));
+                    } else if($block instanceof GoldOre) {
+                        $event->setDrops([VanillaItems::GOLD_INGOT()]);
+                        $event->setXpDropAmount(rand(2, 6));
+                    }
+
+                    //Minecraft Wiki information :
+                    //Diamond ore xp drop : rand(3, 7)
+                    //Coal ore xp drop : rand(0, 2)
+                    //Redstone ore xp drop : rand(1, 5)
+                    //Lapis Lazuli or xp drop : rand(2, 5)
             }
         }
     }
