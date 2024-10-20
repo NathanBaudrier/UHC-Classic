@@ -9,6 +9,7 @@ use pocketmine\player\Player;
 use uhc\game\team\Team;
 use uhc\items\ConfigItem;
 use uhc\libs\scoreboard\Scoreboard;
+use uhc\listeners\custom\UPlayerDeathEvent;
 
 class UPlayer extends Player {
 
@@ -90,5 +91,9 @@ class UPlayer extends Player {
 
     public function resetTeam() : void {
         $this->team = null;
+    }
+
+    public function kill() : void {
+        (new UPlayerDeathEvent($this))->call();
     }
 }
