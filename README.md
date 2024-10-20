@@ -7,7 +7,7 @@
 - [x] Vanilla + 
 - [ ] Timber
 - [x] Hastey Boys 
-- [ ] Blood Enchant 
+- [x] Blood Enchant 
 - [ ] Blood Fusion 
 - [ ] Bookception 
 - [ ] Anonymous 

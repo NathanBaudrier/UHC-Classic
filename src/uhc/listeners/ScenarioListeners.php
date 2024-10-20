@@ -6,8 +6,11 @@ use pocketmine\block\BlockTypeIds;
 use pocketmine\block\GoldOre;
 use pocketmine\block\IronOre;
 use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerItemEnchantEvent;
 use pocketmine\item\Axe;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
@@ -97,6 +100,32 @@ class ScenarioListeners implements Listener {
                 if($scenarios->getById($scenarios::NO_CLEAN_UP_ID)->isEnabled()) {
                     $killer->setHealth($killer->getHealth() / 2);
                 }
+            }
+        }
+    }
+
+    public function onShoot(EntityShootBowEvent $event) : void {
+        $player = $event->getEntity();
+        $event->
+        $scenarios = $this->game->getScenarios();
+
+        if($this->game->hasStarted()) {
+            switch (true) {
+                case $scenarios->getById($scenarios::BOW_SEED_ID)->isEnabled():
+                    //To test
+                    break;
+            }
+        }
+    }
+
+    public function onEnchant(PlayerItemEnchantEvent $event) : void {
+        $player = $event->getPlayer();
+        $scenarios = $this->game->getScenarios();
+
+        if($this->game->hasStarted()) {
+
+            if($scenarios->getById($scenarios::BLOOD_ENCHANT_ID)->isEnabled()) {
+                $player->attack(new EntityDamageEvent($player, EntityDamageEvent::CAUSE_ENTITY_ATTACK, 0.5));
             }
         }
     }
