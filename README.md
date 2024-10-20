@@ -14,7 +14,7 @@
 - [ ] Assault and Battery 
 - [ ] Auto Break 
 - [ ] Barebones 
-- [ ] Blood Diamond 
+- [x] Blood Diamond 
 - [ ] Bow See 
 - [x] No Clean Up 
 - [ ] Blood Fusion

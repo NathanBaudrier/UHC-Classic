@@ -65,6 +65,7 @@ class ScenarioListeners implements Listener {
      * @throws RandomException
      */
     public function onBreak(BlockBreakEvent $event) : void {
+        $player = $event->getPlayer();
         $block = $event->getBlock();
 
         if($this->game->hasStarted()) {
@@ -110,6 +111,9 @@ class ScenarioListeners implements Listener {
                     ) {
                         rand(0, 1) ? $event->setDrops(array_map(function ($item) { return $item->setCount($item->getCount() * 2); }, $event->getDrops())) : $event->setDrops([]);
                     }
+
+                case $scenarios->getById($scenarios::BLOOD_DIAMOND_ID)->isEnabled():
+                    if($block instanceof DiamondOre) $player->attack(new EntityDamageEvent($player, EntityDamageEvent::CAUSE_ENTITY_ATTACK, 0.5));
             }
         }
     }
