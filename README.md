@@ -22,7 +22,7 @@
 - [x] Cut Clean 
 - [ ] Fast Getaway 
 - [ ] Long Shot 
-- [ ] Double or Nothing 
+- [x] Double or Nothing 
 - [ ] Blocked 
 - [ ] Bench Blitz
 - [ ] Damage Cycle 

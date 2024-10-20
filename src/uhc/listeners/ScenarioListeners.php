@@ -3,8 +3,13 @@
 namespace uhc\listeners;
 
 use pocketmine\block\BlockTypeIds;
+use pocketmine\block\CoalOre;
+use pocketmine\block\DiamondOre;
+use pocketmine\block\EmeraldOre;
 use pocketmine\block\GoldOre;
 use pocketmine\block\IronOre;
+use pocketmine\block\LapisOre;
+use pocketmine\block\RedstoneOre;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
@@ -86,6 +91,18 @@ class ScenarioListeners implements Listener {
                     //Coal ore xp drop : rand(0, 2)
                     //Redstone ore xp drop : rand(1, 5)
                     //Lapis Lazuli or xp drop : rand(2, 5)
+
+                case $scenarios->getById($scenarios::DOUBLE_OR_NOTHING_ID)->isEnabled():
+                    if($block instanceof CoalOre
+                        || $block instanceof IronOre
+                        || $block instanceof GoldOre
+                        || $block instanceof RedstoneOre
+                        || $block instanceof LapisOre
+                        || $block instanceof DiamondOre
+                        || $block instanceof EmeraldOre
+                    ) {
+                        rand(0, 1) ? $event->setDrops(array_map(function ($item) { return $item->setCount($item->getCount() * 2); }, $event->getDrops())) : $event->setDrops([]);
+                    }
             }
         }
     }
