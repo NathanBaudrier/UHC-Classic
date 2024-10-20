@@ -1,0 +1,44 @@
+# UHC Classic Plugin
+
+### Scenario todo list :
+
+- [ ] Final Heal 
+- [ ] Cat Eyes 
+- [x] Vanilla + 
+- [ ] Timber
+- [x] Hastey Boys 
+- [ ] Blood Enchant 
+- [ ] Blood Fusion 
+- [ ] Bookception 
+- [ ] Anonymous 
+- [ ] Assault and Battery 
+- [ ] Auto Break 
+- [ ] Barebones 
+- [ ] Blood Diamond 
+- [ ] Bow See 
+- [x] No Clean Up 
+- [ ] Blood Fusion
+- [ ] Time Bomb
+- [ ] Cut Clean 
+- [ ] Fast Getaway 
+- [ ] Long Shot 
+- [ ] Double or Nothing 
+- [ ] Blocked 
+- [ ] Bench Blitz
+- [ ] Damage Cycle 
+- [ ] Blood Fusion
+- [ ] Sky High 
+- [ ] Vein Miner 
+- [ ] Safe Miner 
+- [ ] Bow Swap 
+- [ ] Switch 
+- [ ] Monster & Cie 
+- [ ] Kill Switch 
+- [ ] Shared Life 
+- [ ] Paranoia 
+- [ ] Nine Slots 
+- [ ] Backpack 
+- [ ] Mystery Teams 
+- [ ] Rock, Paper, Scissors 
+- [ ] Best PVE 
+- [ ] Cripple 
