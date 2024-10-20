@@ -65,8 +65,6 @@ class ScenarioListeners implements Listener {
                     }
 
                 case $scenarios->getById($scenarios::TIMBER_ID):
-                    $x = $block->getPosition()->getX();
-                    $y = $block->getPosition()->getY();
             }
         }
     }
@@ -76,8 +74,11 @@ class ScenarioListeners implements Listener {
         $killer = $event->getKiller();
         $scenarios = $this->game->getScenarios();
 
-        if($killer !== null) {
-            if($scenarios->getById($scenarios::NO_CLEAN_UP_ID)->isEnabled()) {
+        if($this->game->hasStarted()) {
+            if($killer !== null) {
+                if($scenarios->getById($scenarios::NO_CLEAN_UP_ID)->isEnabled()) {
+                    $killer->setHealth($killer->getHealth() / 2);
+                }
             }
         }
     }
