@@ -145,6 +145,12 @@ class ScenarioListeners implements Listener {
                     case $scenarios->getById($scenarios::BOW_SEED_ID)->isEnabled():
                         $player->sendMessage(TextFormat::GREEN . $target->getName() . " a " . $target->getHealth() . "pv.");
                         //To test
+
+                    case $scenarios->getById($scenarios::LONG_SHOT_ID)->isEnabled():
+                        if($player->getPosition()->distance($target->getPosition()->asVector3()) > 75) {
+                            $player->setHealth($player->getHealth() + 1);
+                            $event->setForce($event->getForce() * 1.5);
+                        }
                 }
             }
         }

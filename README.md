@@ -21,7 +21,7 @@
 - [ ] Time Bomb
 - [x] Cut Clean 
 - [x] Fast Getaway 
-- [ ] Long Shot 
+- [x] Long Shot 
 - [x] Double or Nothing 
 - [ ] Blocked 
 - [ ] Bench Blitz
