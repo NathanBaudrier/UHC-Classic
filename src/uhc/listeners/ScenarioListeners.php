@@ -136,14 +136,16 @@ class ScenarioListeners implements Listener {
 
     public function onShoot(EntityShootBowEvent $event) : void {
         $player = $event->getEntity();
-        $event->
+        $target = $event->getProjectile()->getOwningEntity();
         $scenarios = $this->game->getScenarios();
 
-        if($this->game->hasStarted()) {
-            switch (true) {
-                case $scenarios->getById($scenarios::BOW_SEED_ID)->isEnabled():
-                    //To test
-                    break;
+        if($player instanceof UPlayer && $target instanceof UPlayer) {
+            if($this->game->hasStarted()) {
+                switch (true) {
+                    case $scenarios->getById($scenarios::BOW_SEED_ID)->isEnabled():
+                        $player->sendMessage(TextFormat::GREEN . $target->getName() . " a " . $target->getHealth() . "pv.");
+                        //To test
+                }
             }
         }
     }

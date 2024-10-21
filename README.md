@@ -15,7 +15,7 @@
 - [ ] Auto Break 
 - [ ] Barebones 
 - [x] Blood Diamond 
-- [ ] Bow See 
+- [x] Bow See 
 - [x] No Clean Up 
 - [ ] Blood Fusion
 - [ ] Time Bomb
