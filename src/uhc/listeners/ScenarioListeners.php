@@ -10,6 +10,7 @@ use pocketmine\block\GoldOre;
 use pocketmine\block\IronOre;
 use pocketmine\block\LapisOre;
 use pocketmine\block\RedstoneOre;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\event\block\BlockBreakEvent;
@@ -61,9 +62,6 @@ class ScenarioListeners implements Listener {
         }
     }
 
-    /**
-     * @throws RandomException
-     */
     public function onBreak(BlockBreakEvent $event) : void {
         $player = $event->getPlayer();
         $block = $event->getBlock();
@@ -74,7 +72,7 @@ class ScenarioListeners implements Listener {
 
             switch (true) {
                 case $scenarios->getById($scenarios::VANILLA_PLUS_ID)->isEnabled():
-                    $random = random_int(0, 100);
+                    $random = rand(0, 100);
 
                     if($block->getTypeId() == BlockTypeIds::OAK_LEAVES || $block->getTypeId() == BlockTypeIds::DARK_OAK_LEAVES) {
                         if($random <= 20) $event->setDrops([VanillaItems::APPLE()]);
@@ -83,7 +81,31 @@ class ScenarioListeners implements Listener {
                     }
 
                 case $scenarios->getById($scenarios::TIMBER_ID):
-                    break;
+                    $world = $block->getPosition()->getWorld();
+
+                    if($block->getTypeId() == BlockTypeIds::OAK_LOG || $block->getTypeId() == BlockTypeIds::BIRCH_LOG) {
+                        for($y = $block->getPosition()->getY() + 1;
+                            (
+                                $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add($block->getPosition()->getX(), $y, $block->getPosition()->getZ()))
+                            )
+                                ->getTypeId() == BlockTypeIds::OAK_LOG || $nextBlock->getTypeId() == BlockTypeIds::BIRCH_LOG;
+                            $y++
+                        ) {
+                            $world->setBlock($nextBlock->getPosition()->asVector3(), VanillaBlocks::AIR());
+                            $world->dropItem($nextBlock->getPosition()->asVector3(), $event->getDrops()[0]);
+                        }
+
+                        for($y = $block->getPosition()->getY() - 1;
+                            (
+                            $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add($block->getPosition()->getX(), $y, $block->getPosition()->getZ()))
+                            )
+                                ->getTypeId() == BlockTypeIds::OAK_LOG || $nextBlock->getTypeId() == BlockTypeIds::BIRCH_LOG;
+                            $y--
+                        ) {
+                            $world->setBlock($nextBlock->getPosition()->asVector3(), VanillaBlocks::AIR());
+                            $world->dropItem($nextBlock->getPosition()->asVector3(), $event->getDrops()[0]);
+                        }
+                    }
 
                 case $scenarios->getById($scenarios::CUT_CLEAN_ID)->isEnabled():
                     if($block instanceof IronOre) {
@@ -94,7 +116,7 @@ class ScenarioListeners implements Listener {
                         $event->setXpDropAmount(rand(2, 6));
                     }
 
-                    //Minecraft Wiki information :
+                //Minecraft Wiki information :
                     //Diamond ore xp drop : rand(3, 7)
                     //Coal ore xp drop : rand(0, 2)
                     //Redstone ore xp drop : rand(1, 5)

@@ -5,7 +5,7 @@
 - [x] Final Heal 
 - [ ] Cat Eyes 
 - [x] Vanilla + 
-- [ ] Timber
+- [x] Timber
 - [x] Hastey Boys 
 - [x] Blood Enchant 
 - [ ] Blood Fusion 
