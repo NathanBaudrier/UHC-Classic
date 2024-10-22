@@ -19,10 +19,12 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerItemEnchantEvent;
 use pocketmine\item\Axe;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
+use pocketmine\item\GoldenApple;
 use pocketmine\item\Hoe;
 use pocketmine\item\Pickaxe;
 use pocketmine\item\Shovel;
@@ -46,6 +48,8 @@ class ScenarioListeners implements Listener {
     }
 
     public function onCraft(CraftItemEvent $event) : void {
+        $player = $event->getPlayer();
+
         if($this->game->hasStarted()) {
 
             $scenarios = $this->game->getScenarios();
@@ -58,6 +62,13 @@ class ScenarioListeners implements Listener {
                             || $item instanceof Hoe
                             || $item instanceof Shovel) {
                             $item->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 3));
+                        }
+                    }
+
+                case $scenarios->getById($scenarios::PARANOIA_ID)->isEnabled():
+                    foreach($event->getOutputs() as $item) {
+                        if($item instanceof GoldenApple || $item->getTypeId() == BlockTypeIds::ENCHANTING_TABLE || $item->getTypeId() == BlockTypeIds::ANVIL) {
+                            $player->getServer()->broadcastMessage($player->getName() . " a confectionné " . $item->getName() . " aux coordonnées : " . $player->getPosition()->getX() . ":" . $player->getPosition()->getY() . ":" . $player->getPosition()->getZ());
                         }
                     }
             }
@@ -141,6 +152,11 @@ class ScenarioListeners implements Listener {
 
                 case $scenarios->getById($scenarios::BLOOD_DIAMOND_ID)->isEnabled():
                     if($block instanceof DiamondOre) $player->attack(new EntityDamageEvent($player, EntityDamageEvent::CAUSE_ENTITY_ATTACK, 0.5));
+
+                case $scenarios->getById($scenarios::PARANOIA_ID)->isEnabled():
+                    if($block instanceof GoldOre || $block instanceof DiamondOre) {
+                        $player->getServer()->broadcastMessage($player->getName() . " a miné " . $block->getName() . " aux coordonnées : " . $player->getPosition()->getX() . ":" . $player->getPosition()->getY() . ":" . $player->getPosition()->getZ());
+                    }
             }
         }
     }
@@ -157,6 +173,11 @@ class ScenarioListeners implements Listener {
 
                 case $scenarios->getById($scenarios::FAST_GATEWAY_ID)->isEnabled():
                     $killer?->getEffects()->add(new EffectInstance(VanillaEffects::SPEED(), 60*20, 0, false));
+
+                case $scenarios->getById($scenarios::PARANOIA_ID)->isEnabled():
+                    if($killer != null) {
+                        $player->getServer()->broadcastMessage($killer->getName() . " a tué " . $player->getName() . " aux coordonnées : " . $killer->getPosition()->getX() . ":" . $killer->getPosition()->getY() . ":" . $killer->getPosition()->getZ());
+                    }
             }
         }
     }
@@ -244,5 +265,20 @@ class ScenarioListeners implements Listener {
         }
     }
 
+    public function onConsume(PlayerItemConsumeEvent $event) : void {
+        $player = $event->getPlayer();
+        $item = $event->getItem();
 
+        if($this->game->hasStarted()) {
+
+            $scenarios = $this->game->getScenarios();
+
+            switch (true) {
+                case $scenarios->getById($scenarios::PARANOIA_ID)->isEnabled():
+                    if($item instanceof GoldenApple) {
+                        $player->getServer()->broadcastMessage($player->getName() . " a mangé " . $item->getName() . " aux coordonnées : " . $player->getPosition()->getX() . ":" . $player->getPosition()->getY() . ":" . $player->getPosition()->getZ());
+                    }
+            }
+        }
+    }
 }

@@ -35,7 +35,7 @@
 - [ ] Monster & Cie 
 - [ ] Kill Switch 
 - [ ] Shared Life 
-- [ ] Paranoia 
+- [x] Paranoia 
 - [ ] Nine Slots 
 - [ ] Backpack 
 - [ ] Mystery Teams 
