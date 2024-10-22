@@ -12,7 +12,7 @@
 - [ ] Bookception 
 - [x] Anonymous 
 - [ ] Assault and Battery 
-- [ ] Auto Break 
+- [x] Auto Break 
 - [ ] Barebones 
 - [x] Blood Diamond 
 - [x] Bow See 

@@ -14,6 +14,7 @@ use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\inventory\CraftItemEvent;
@@ -26,12 +27,13 @@ use pocketmine\item\Hoe;
 use pocketmine\item\Pickaxe;
 use pocketmine\item\Shovel;
 use pocketmine\item\VanillaItems;
+use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
-use Random\RandomException;
 use uhc\game\Game;
 use uhc\listeners\custom\NewDamageCycleEvent;
 use uhc\listeners\custom\UPlayerDeathEvent;
+use uhc\Main;
 use uhc\UPlayer;
 use uhc\utils\scenarios\DamageCycle;
 
@@ -107,6 +109,9 @@ class ScenarioListeners implements Listener {
                         }
                     }
 
+                case $scenarios->getById($scenarios::VEIN_MINER)->isEnabled():
+                    //TODO
+
                 case $scenarios->getById($scenarios::CUT_CLEAN_ID)->isEnabled():
                     if($block instanceof IronOre) {
                         $event->setDrops([VanillaItems::IRON_INGOT()]);
@@ -116,7 +121,7 @@ class ScenarioListeners implements Listener {
                         $event->setXpDropAmount(rand(2, 6));
                     }
 
-                //Minecraft Wiki information :
+                    //Minecraft Wiki information :
                     //Diamond ore xp drop : rand(3, 7)
                     //Coal ore xp drop : rand(0, 2)
                     //Redstone ore xp drop : rand(1, 5)
@@ -223,4 +228,21 @@ class ScenarioListeners implements Listener {
             Server::getInstance()->broadcastMessage("(" . $game->getDamageCycle()->getDeaths() . " joueurs sont mort à cause du cycle précédent.)");
         }
     }
+
+    public function onPlace(BlockPlaceEvent $event) : void {
+        $player = $event->getPlayer();
+        $block = $event->getBlockAgainst();
+        $scenarios = $this->game->getScenarios();
+
+        if($this->game->hasStarted()) {
+            switch (true) {
+                case $scenarios->getById($scenarios::AUTO_BREAK_ID)->isEnabled():
+                    Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($block) {
+                        $block?->getPosition()->getWorld()->setBlock($block->getPosition()->asVector3(), VanillaBlocks::AIR());
+                    }), 60*20);
+            }
+        }
+    }
+
+
 }
