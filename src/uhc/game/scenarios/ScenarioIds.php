@@ -37,5 +37,6 @@ interface ScenarioIds {
     const ANONYMOUS_ID = 30;
     const ASSAULT_AND_BATTERY_ID = 31;
     const CRIPPLE_ID = 32;
+    const VEIN_MINER = 33;
 
 }

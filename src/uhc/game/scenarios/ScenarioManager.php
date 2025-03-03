@@ -16,6 +16,7 @@ class ScenarioManager implements ScenarioIds {
     public function init() : void {
         $this->scenarios[] = new Scenario(self::FINAL_HEAL_ID, "Final Heal", "");
         $this->scenarios[] = new Scenario(self::CAT_EYES_ID, "Cat Eyes", "");
+        $this->scenarios[] = new Scenario(self::VANILLA_PLUS_ID, "Vanilla+", "");
         $this->scenarios[] = new Scenario(self::TIMBER_ID, "Timber", "");
         $this->scenarios[] = new Scenario(self::HASTEY_BOYS_ID, "Hastey Boys", "");
         $this->scenarios[] = new Scenario(self::BLOOD_DIAMOND_ID, "Blood Diamond", "");
@@ -46,6 +47,7 @@ class ScenarioManager implements ScenarioIds {
         $this->scenarios[] = new Scenario(self::ANONYMOUS_ID, "Anonymous", "");
         $this->scenarios[] = new Scenario(self::ASSAULT_AND_BATTERY_ID, "Assault and Battery", "");
         $this->scenarios[] = new Scenario(self::CRIPPLE_ID, "Cripple", "");
+        $this->scenarios[] = new Scenario(self::VEIN_MINER, "Vein Miner", "");
     }
 
     /**

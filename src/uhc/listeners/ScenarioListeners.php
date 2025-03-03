@@ -21,6 +21,7 @@ use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerItemEnchantEvent;
+use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\item\Axe;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
@@ -54,23 +55,36 @@ class ScenarioListeners implements Listener {
 
             $scenarios = $this->game->getScenarios();
 
+            /*
             switch (true) {
-                case $scenarios->getById($scenarios::HASTEY_BOYS_ID)->isEnabled():
-                    foreach($event->getOutputs() as $item) {
-                        if($item instanceof Axe
-                            || $item instanceof Pickaxe
-                            || $item instanceof Hoe
-                            || $item instanceof Shovel) {
-                            $item->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 3));
-                        }
-                    }
-
-                case $scenarios->getById($scenarios::PARANOIA_ID)->isEnabled():
+                case $scenarios->getById($scenarios::PARANOIA_ID)?->isEnabled():
                     foreach($event->getOutputs() as $item) {
                         if($item instanceof GoldenApple || $item->getTypeId() == BlockTypeIds::ENCHANTING_TABLE || $item->getTypeId() == BlockTypeIds::ANVIL) {
                             $player->getServer()->broadcastMessage($player->getName() . " a confectionné " . $item->getName() . " aux coordonnées : " . $player->getPosition()->getX() . ":" . $player->getPosition()->getY() . ":" . $player->getPosition()->getZ());
                         }
                     }
+            }
+            */
+        }
+    }
+
+    public function onHeldItem(PlayerItemHeldEvent $event) : void {
+        $player = $event->getPlayer();
+        $item = $event->getItem();
+        $scenarios = $this->game->getScenarios();
+
+        if($scenarios->getById($scenarios::HASTEY_BOYS_ID)?->isEnabled()) {
+            if(
+                $item instanceof Axe
+                ||
+                $item instanceof Pickaxe
+                ||
+                $item instanceof Hoe
+                ||
+                $item instanceof Shovel
+            ) {
+                $item->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 4));
+                $player->getInventory()->setItemInHand($item);
             }
         }
     }
@@ -84,7 +98,7 @@ class ScenarioListeners implements Listener {
             $scenarios = $this->game->getScenarios();
 
             switch (true) {
-                case $scenarios->getById($scenarios::VANILLA_PLUS_ID)->isEnabled():
+                case $scenarios->getById($scenarios::VANILLA_PLUS_ID)?->isEnabled():
                     $random = rand(0, 100);
 
                     if($block->getTypeId() == BlockTypeIds::OAK_LEAVES || $block->getTypeId() == BlockTypeIds::DARK_OAK_LEAVES) {
@@ -93,13 +107,14 @@ class ScenarioListeners implements Listener {
                         if($random <= 20) $event->setDrops([VanillaItems::FLINT()]);
                     }
 
-                case $scenarios->getById($scenarios::TIMBER_ID):
+                case $scenarios->getById($scenarios::TIMBER_ID)?->isEnabled():
                     $world = $block->getPosition()->getWorld();
 
-                    if($block->getTypeId() == BlockTypeIds::OAK_LOG || $block->getTypeId() == BlockTypeIds::BIRCH_LOG) {
+                    if(($block->getTypeId() == BlockTypeIds::OAK_LOG || $block->getTypeId() == BlockTypeIds::BIRCH_LOG) && count($event->getDrops()) != 0) {
+                        var_dump("TIMBER OK");
                         for($y = $block->getPosition()->getY() + 1;
                             (
-                                $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add($block->getPosition()->getX(), $y, $block->getPosition()->getZ()))
+                                $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add(0, 1, 0))
                             )
                                 ->getTypeId() == BlockTypeIds::OAK_LOG || $nextBlock->getTypeId() == BlockTypeIds::BIRCH_LOG;
                             $y++
@@ -110,7 +125,7 @@ class ScenarioListeners implements Listener {
 
                         for($y = $block->getPosition()->getY() - 1;
                             (
-                            $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add($block->getPosition()->getX(), $y, $block->getPosition()->getZ()))
+                            $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add(0, -1, 0))
                             )
                                 ->getTypeId() == BlockTypeIds::OAK_LOG || $nextBlock->getTypeId() == BlockTypeIds::BIRCH_LOG;
                             $y--
@@ -210,7 +225,7 @@ class ScenarioListeners implements Listener {
 
         if($this->game->hasStarted()) {
 
-            if($scenarios->getById($scenarios::BLOOD_ENCHANT_ID)->isEnabled()) {
+            if($scenarios->getById($scenarios::BLOOD_ENCHANT_ID)?->isEnabled()) {
                 $player->attack(new EntityDamageEvent($player, EntityDamageEvent::CAUSE_ENTITY_ATTACK, 0.5));
             }
         }

@@ -17,10 +17,9 @@ class ConfigItem extends Item {
 
     public function __construct() {
         parent::__construct(new ItemIdentifier(ItemTypeIds::NETHER_STAR), "Config");
-    }
+        $this->setCustomName("Config");
+        $this->setLore(["UI to config the game."]);
 
-    public function getCustomName() : string {
-        return "Config";
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector, array &$returnedItems) : ItemUseResult {
@@ -37,10 +36,15 @@ class ConfigItem extends Item {
             if ($data === null) return;
             switch ($data) {
                 case 0:
-                    $this->sendMenuConfigForm($player);
+                    $this->sendSettingsForm($player);
                     break;
                 case 1:
                     $this->sendScenariosForm($player);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    Main::getGame()->start();
                     break;
             }
         });
@@ -50,6 +54,7 @@ class ConfigItem extends Item {
         $form->addButton("Paramètres");
         $form->addButton("Scénarios");
         $form->addButton("Résumé");
+        $form->addButton( TextFormat::GREEN . "Start");
         $form->addButton(TextFormat::RED . "Quit");
 
         $player->sendForm($form);

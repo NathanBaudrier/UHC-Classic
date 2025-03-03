@@ -2,7 +2,11 @@
 
 namespace uhc\game;
 
+use pocketmine\block\VanillaBlocks;
+use pocketmine\math\Vector3;
+use pocketmine\player\GameMode;
 use pocketmine\utils\TextFormat;
+use pocketmine\world\format\Chunk;
 use uhc\game\scenarios\ScenarioManager;
 use uhc\game\settings\Border;
 use uhc\game\settings\Teams;
@@ -31,17 +35,55 @@ class Game {
 
     private ?DamageCycle $damageCycle = null;
 
-    public function __construct() {
-        $this->main = Main::getInstance();
+    public function __construct(Main $main) {
+        $this->main = $main;
+
         $this->duration = new Time();
         $this->border = new Border();
         $this->teams = new Teams();
         $this->scenarios = new ScenarioManager();
         $this->pvpTime = new Time(0, 20);
+
+        $world = $this->main->getServer()->getWorldManager()->getDefaultWorld();
+        if(!$world->isLoaded()) {
+            Main::getInstance()->getServer()->getWorldManager()->loadWorld($world->getFolderName());
+        }
+        $world->setSpawnLocation(new Vector3(0, 105, 0));
+
+        $this->createWaitingSpawn();
     }
 
     public function hasStarted() : bool {
         return $this->started;
+    }
+
+    public function createWaitingSpawn() : void {
+        $world = $this->main->getServer()->getWorldManager()->getDefaultWorld();
+        $baseY = 100;
+        $radius = 20;
+
+        // Platform
+        for($x = $radius; $x >= -$radius; $x--) {
+            for($z = $radius; $z >= -$radius; $z--) {
+                $world->setBlock(new Vector3($x, $baseY, $z), VanillaBlocks::BARRIER());
+            }
+        }
+
+        // Walls
+        for($c = $radius + 1; $c >= -$radius - 1; $c--) {
+            for($y = $baseY + 1; $y < $baseY + 5; $y++) {
+                $world->setBlock(new Vector3($radius + 1, $y, $c), VanillaBlocks::BARRIER());
+                $world->setBlock(new Vector3($c, $y, $radius + 1), VanillaBlocks::BARRIER());
+            }
+        }
+
+        for($c = -$radius - 1; $c <= $radius + 1; $c++) {
+            for($y = $baseY + 1; $y < $baseY + 5; $y++) {
+                $world->setBlock(new Vector3(-$radius - 1, $y, $c), VanillaBlocks::BARRIER());
+                $world->setBlock(new Vector3($c, $y, -$radius - 1), VanillaBlocks::BARRIER());
+            }
+        }
+
     }
 
     public function start() : void {
@@ -55,10 +97,28 @@ class Game {
 
         if($this->scenarios->getById($this->scenarios::ANONYMOUS_ID)->isEnabled()) {
             foreach($this->players as $player) {
-                $player->setDisplayName(TextFormat::OBFUSCATED . "MONKEY");
+                $player->setDisplayName(TextFormat::OBFUSCATED . "MONKEY" . TextFormat::RESET);
                 //$player->setSkin(); TODO
             }
         }
+
+        foreach ($this->players as $player) {
+            $randomX = rand(-$this->border->getSize(), $this->border->getSize());
+            $randomZ = rand(-$this->border->getSize(), $this->border->getSize());
+            $world = Main::getInstance()->getServer()->getWorldManager()->getDefaultWorld();
+
+            $world->orderChunkPopulation($randomX >> Chunk::COORD_BIT_SIZE, $randomZ >> Chunk::COORD_BIT_SIZE, null)->onCompletion(
+                function (Chunk $chunk) use ($randomX, $randomZ, $world, $player): void {
+                    $player->teleport(new Vector3($randomX, $world->getHighestBlockAt($randomX, $randomZ), $randomZ));
+                    $player->getInventory()->setContents($this->getStarterKit());
+                    $player->setHealth($player->getMaxHealth());
+                    $player->setGamemode(GameMode::SURVIVAL);
+                },
+                fn() => null
+            );
+        }
+
+        $this->started = true;
     }
 
     public function getLimitPlayers() : int {

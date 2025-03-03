@@ -19,6 +19,8 @@ class UPlayer extends Player {
 
     private ?DisconnectTask $disconnectTask = null;
 
+
+
     public function isOp() : bool {
         return $this->getServer()->isOp($this->getName());
     }

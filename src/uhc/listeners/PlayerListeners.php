@@ -19,6 +19,7 @@ use uhc\game\scenarios\ScenarioIds;
 use uhc\libs\scoreboard\Scoreboard;
 use uhc\listeners\custom\PvpEnabledEvent;
 use uhc\listeners\custom\UPlayerDeathEvent;
+use uhc\Main;
 use uhc\UPlayer;
 
 class PlayerListeners implements Listener {
@@ -44,6 +45,8 @@ class PlayerListeners implements Listener {
                 $scoreboard->addLine(1, "Online : " . count($player->getServer()->getOnlinePlayers()) . "/" . $player->getServer()->getMaxPlayers());
                 $scoreboard->addLine(2, "Host : "/* . $this->game->getHost()*/);
                 $scoreboard->addLine(3, "-----------");
+
+                $player->teleport(Main::getInstance()->getServer()->getWorldManager()->getDefaultWorld()->getSafeSpawn());
             } else {
                 if($game->isInGame($player)) {
                     $player->reconnectToGame();
@@ -89,7 +92,7 @@ class PlayerListeners implements Listener {
         $player = $event->getTransaction()->getSource();
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() /* && !$player->isHost()*/ || $player->isOp()) {
+            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
                 $event->cancel();
             }
         }
@@ -99,7 +102,7 @@ class PlayerListeners implements Listener {
         $player = $event->getPlayer();
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && $player->isOp()) {
+            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
                 $event->cancel();
             }
         }
@@ -109,7 +112,7 @@ class PlayerListeners implements Listener {
         $player = $event->getEntity();
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && $player->isOp()) {
+            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
                 $event->cancel();
             }
         }
@@ -134,7 +137,7 @@ class PlayerListeners implements Listener {
         $player = $event->getPlayer();
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && $player->isOp()) {
+            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
                 $event->cancel();
             }
         }
