@@ -5,6 +5,7 @@ namespace uhc\listeners;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\CoalOre;
 use pocketmine\block\DiamondOre;
+use pocketmine\block\Door;
 use pocketmine\block\EmeraldOre;
 use pocketmine\block\GoldOre;
 use pocketmine\block\IronOre;
@@ -21,6 +22,7 @@ use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerItemEnchantEvent;
+use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\item\Axe;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
@@ -120,9 +122,6 @@ class ScenarioListeners implements Listener {
                         }
                     }
 
-                case $scenarios->getById($scenarios::VEIN_MINER)->isEnabled():
-                    //TODO
-
                 case $scenarios->getById($scenarios::CUT_CLEAN_ID)->isEnabled():
                     if($block instanceof IronOre) {
                         $event->setDrops([VanillaItems::IRON_INGOT()]);
@@ -156,6 +155,11 @@ class ScenarioListeners implements Listener {
                 case $scenarios->getById($scenarios::PARANOIA_ID)->isEnabled():
                     if($block instanceof GoldOre || $block instanceof DiamondOre) {
                         $player->getServer()->broadcastMessage($player->getName() . " a miné " . $block->getName() . " aux coordonnées : " . $player->getPosition()->getX() . ":" . $player->getPosition()->getY() . ":" . $player->getPosition()->getZ());
+                    }
+
+                case $scenarios->getById($scenarios::MONSTER_AND_CIE_ID)->isEnabled():
+                    if($block instanceof Door && $this->game->getDoors()->exists($block)) {
+                        $this->game->getDoors()->remove($block);
                     }
             }
         }
@@ -258,9 +262,13 @@ class ScenarioListeners implements Listener {
         if($this->game->hasStarted()) {
             switch (true) {
                 case $scenarios->getById($scenarios::AUTO_BREAK_ID)->isEnabled():
-                    Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use ($block) {
+                    Main::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function() use ($block) {
                         $block?->getPosition()->getWorld()->setBlock($block->getPosition()->asVector3(), VanillaBlocks::AIR());
                     }), 60*20);
+                case $scenarios->getById($scenarios::MONSTER_AND_CIE_ID)->isEnabled():
+                    if($block instanceof Door) {
+                        $this->game->getDoors()->add($block);
+                    }
             }
         }
     }
@@ -280,5 +288,12 @@ class ScenarioListeners implements Listener {
                     }
             }
         }
+    }
+
+    public function onMove(PlayerMoveEvent $event) : void {
+        $player = $event->getPlayer();
+
+        //détecter si un joueur passe à travers une porte
+        //je ne connais pas la gestion d'une position d'une porte sur le jeu
     }
 }

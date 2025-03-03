@@ -9,6 +9,8 @@ use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use uhc\game\scenarios\ScenarioIds;
+use uhc\libs\form\CustomForm;
 use uhc\libs\form\SimpleForm;
 use uhc\Main;
 use uhc\UPlayer;
@@ -69,21 +71,33 @@ class ConfigItem extends Item {
         $player->sendForm($form);
     }
 
+    private function sendTeamsForm(UPlayer $player) : void {
+        $form = new CustomForm(function (UPlayer $player, $data) {
+            if($data === null) {
+                $this->sendSettingsForm($player);
+                return;
+            }
+
+
+        });
+
+        $form->setTitle("Paramètre des équipes Equipes");
+    }
+
     private function sendScenariosForm(UPlayer $player) : void {
         $form = new SimpleForm(function (UPlayer $player, $data) {
             if($data === null) return;
-            if(($scenario = Main::getGame()->getScenarios()->getById($data))->isEnabled()) {
-                $scenario->disable();
-                $this->sendScenariosForm($player);
 
-            } else {
-                $scenario->enable();
-                $this->sendScenariosForm($player);
+            $scenario = Main::getGame()->getScenarios()->getById($data);
+
+            if($scenario->getId() == ScenarioIds::ASSAULT_AND_BATTERY_ID) {
+                $player->sendMessage("Ce scénario ne peut être activé que si des équipes de 2 uniquement sont activées.");
+                return;
             }
 
-            var_dump(Main::getGame()->getScenarios()->getSorted());
-            /*var_dump(Main::getGame()->getScenarios()->getAll());
-            var_dump(Main::getGame()->getScenarios()->getEnabled());*/
+            $scenario->isEnabled() ? $scenario->disable() : $scenario->enable();
+
+            $this->sendMenuConfigForm($player);
         });
 
         $form->setTitle(TextFormat::YELLOW . "Scénarios de la partie");
@@ -94,4 +108,6 @@ class ConfigItem extends Item {
 
         $player->sendForm($form);
     }
+
+
 }

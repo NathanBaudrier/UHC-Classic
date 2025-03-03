@@ -46,6 +46,7 @@ class ScenarioManager implements ScenarioIds {
         $this->scenarios[] = new Scenario(self::ANONYMOUS_ID, "Anonymous", "");
         $this->scenarios[] = new Scenario(self::ASSAULT_AND_BATTERY_ID, "Assault and Battery", "");
         $this->scenarios[] = new Scenario(self::CRIPPLE_ID, "Cripple", "");
+        $this->scenarios[] = new Scenario(self::SUPER_HERO_ID, "Super Hero", "");
     }
 
     /**
@@ -84,7 +85,12 @@ class ScenarioManager implements ScenarioIds {
 
         return array_merge($enabled, $disabled);
     }
-    
+
+    /**
+     * Return a scenario by his id
+     * @param int $id
+     * @return Scenario|null
+     */
     public function getById(int $id) : ?Scenario {
         foreach($this->scenarios as $scenario) {
             if($scenario->getId() == $id) return $scenario;

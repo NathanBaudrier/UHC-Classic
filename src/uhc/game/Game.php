@@ -3,6 +3,8 @@
 namespace uhc\game;
 
 use pocketmine\utils\TextFormat;
+use uhc\game\scenarios\manager\DoorManager;
+use uhc\game\scenarios\manager\PowerManager;
 use uhc\game\scenarios\ScenarioManager;
 use uhc\game\settings\Border;
 use uhc\game\settings\Teams;
@@ -31,6 +33,9 @@ class Game {
 
     private ?DamageCycle $damageCycle = null;
 
+    private DoorManager $doors;
+    private PowerManager $powers;
+
     public function __construct() {
         $this->main = Main::getInstance();
         $this->duration = new Time();
@@ -38,6 +43,8 @@ class Game {
         $this->teams = new Teams();
         $this->scenarios = new ScenarioManager();
         $this->pvpTime = new Time(0, 20);
+
+        $this->doors = new DoorManager();
     }
 
     public function hasStarted() : bool {
@@ -128,5 +135,13 @@ class Game {
 
     public function setDamageCycle(DamageCycle $damageCycle) : void {
         $this->damageCycle = $damageCycle;
+    }
+
+    public function getDoors() : DoorManager {
+        return $this->doors;
+    }
+
+    public function getPowers() : PowerManager {
+        return $this->powers;
     }
 }

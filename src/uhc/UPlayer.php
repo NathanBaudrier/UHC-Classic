@@ -19,6 +19,8 @@ class UPlayer extends Player {
 
     private ?DisconnectTask $disconnectTask = null;
 
+    private ?int $power = null;
+
     public function isOp() : bool {
         return $this->getServer()->isOp($this->getName());
     }
@@ -107,5 +109,13 @@ class UPlayer extends Player {
 
     public function reconnectToGame() : void {
         $this->disconnectTask?->getHandler()->cancel();
+    }
+
+    public function getPower() : ?int {
+        return $this->power;
+    }
+
+    public function setPower(int $power) : void {
+        $this->power = $power;
     }
 }
