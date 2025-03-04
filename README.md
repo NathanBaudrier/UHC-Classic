@@ -1,5 +1,10 @@
 # UHC Classic Plugin
 
+### Presentation
+
+This is a minecraft plugin for Pocketmine servers (https://github.com/pmmp/PocketMine-MP) as part of a project to create an UHC server.
+I am in charge of developing all the UHC game modes of the server, and here is the UHC Classic plugin.
+
 ### Scenario todo list :
 
 - [x] Final Heal 
