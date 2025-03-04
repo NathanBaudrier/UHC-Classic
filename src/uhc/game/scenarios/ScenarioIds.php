@@ -38,5 +38,5 @@ interface ScenarioIds {
     const ASSAULT_AND_BATTERY_ID = 31;
     const CRIPPLE_ID = 32;
     const SUPER_HERO_ID = 33;
-
+    const VEIN_MINER_ID = 33;
 }

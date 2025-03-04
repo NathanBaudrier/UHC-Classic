@@ -2,12 +2,15 @@
 
 namespace uhc\game;
 
+use pocketmine\block\VanillaBlocks;
+use pocketmine\math\Vector3;
+use pocketmine\player\GameMode;
 use pocketmine\utils\TextFormat;
+use pocketmine\world\format\Chunk;
 use uhc\game\scenarios\manager\DoorManager;
-use uhc\game\scenarios\manager\PowerManager;
 use uhc\game\scenarios\ScenarioManager;
 use uhc\game\settings\Border;
-use uhc\game\settings\Teams;
+use uhc\game\team\TeamManager;
 use uhc\Main;
 use uhc\tasks\UpdateTimeTask;
 use uhc\UPlayer;
@@ -26,21 +29,19 @@ class Game {
     private array $players = [];
     private int $maxPlayers = 30;
     private Border $border;
-    private Teams $teams;
+    private TeamManager $teams;
     private ScenarioManager $scenarios;
     private Time $pvpTime;
     private array $starterKit = [];
 
     private ?DamageCycle $damageCycle = null;
-
     private DoorManager $doors;
-    private PowerManager $powers;
 
     public function __construct() {
         $this->main = Main::getInstance();
         $this->duration = new Time();
         $this->border = new Border();
-        $this->teams = new Teams();
+        $this->teams = new TeamManager();
         $this->scenarios = new ScenarioManager();
         $this->pvpTime = new Time(0, 20);
 
@@ -62,10 +63,55 @@ class Game {
 
         if($this->scenarios->getById($this->scenarios::ANONYMOUS_ID)->isEnabled()) {
             foreach($this->players as $player) {
-                $player->setDisplayName(TextFormat::OBFUSCATED . "MONKEY");
+                $player->setDisplayName(TextFormat::OBFUSCATED . "MONKEY" . TextFormat::RESET);
                 //$player->setSkin(); TODO
             }
         }
+
+        foreach ($this->players as $player) {
+            $randomX = rand(-$this->border->getSize(), $this->border->getSize());
+            $randomZ = rand(-$this->border->getSize(), $this->border->getSize());
+            $world = Main::getInstance()->getServer()->getWorldManager()->getDefaultWorld();
+
+            $world->orderChunkPopulation($randomX >> Chunk::COORD_BIT_SIZE, $randomZ >> Chunk::COORD_BIT_SIZE, null)->onCompletion(
+                function (Chunk $chunk) use ($randomX, $randomZ, $world, $player): void {
+                    $player->teleport(new Vector3($randomX, $world->getHighestBlockAt($randomX, $randomZ), $randomZ));
+                    $player->getInventory()->setContents($this->getStarterKit());
+                    $player->setHealth($player->getMaxHealth());
+                    $player->setGamemode(GameMode::SURVIVAL);
+                },
+                fn() => null
+            );
+        }
+    }
+
+    public function createWaitingSpawn() : void {
+        $world = $this->main->getServer()->getWorldManager()->getDefaultWorld();
+        $baseY = 100;
+        $radius = 20;
+
+        // Platform
+        for($x = $radius; $x >= -$radius; $x--) {
+            for($z = $radius; $z >= -$radius; $z--) {
+                $world->setBlock(new Vector3($x, $baseY, $z), VanillaBlocks::BARRIER());
+            }
+        }
+
+        // Walls
+        for($c = $radius + 1; $c >= -$radius - 1; $c--) {
+            for($y = $baseY + 1; $y < $baseY + 5; $y++) {
+                $world->setBlock(new Vector3($radius + 1, $y, $c), VanillaBlocks::BARRIER());
+                $world->setBlock(new Vector3($c, $y, $radius + 1), VanillaBlocks::BARRIER());
+            }
+        }
+
+        for($c = -$radius - 1; $c <= $radius + 1; $c++) {
+            for($y = $baseY + 1; $y < $baseY + 5; $y++) {
+                $world->setBlock(new Vector3(-$radius - 1, $y, $c), VanillaBlocks::BARRIER());
+                $world->setBlock(new Vector3($c, $y, -$radius - 1), VanillaBlocks::BARRIER());
+            }
+        }
+
     }
 
     public function getLimitPlayers() : int {
@@ -104,7 +150,7 @@ class Game {
         return $this->border;
     }
 
-    public function getTeams() : Teams {
+    public function getTeams() : TeamManager {
         return $this->teams;
     }
 
@@ -139,9 +185,5 @@ class Game {
 
     public function getDoors() : DoorManager {
         return $this->doors;
-    }
-
-    public function getPowers() : PowerManager {
-        return $this->powers;
     }
 }

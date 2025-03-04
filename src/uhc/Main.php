@@ -14,7 +14,7 @@ class Main extends PluginBase {
 
     public function onEnable() : void {
         self::$instance = $this;
-        self::$game = new Game();
+        self::$game = new Game($this);
 
         $this->getServer()->getPluginManager()->registerEvents(new PlayerListeners(self::$game), $this);
         $this->getServer()->getPluginManager()->registerEvents(new ScenarioListeners(self::$game), $this);

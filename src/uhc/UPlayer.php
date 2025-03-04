@@ -37,6 +37,9 @@ class UPlayer extends Player {
 
     public function sendGuessInventory() : void {
         $this->getInventory()->clearAll();
+        $this->getInventory()->setContents([
+
+        ]);
     }
 
     public function getScoreboard() : ?Scoreboard {

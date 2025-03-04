@@ -10,6 +10,7 @@ use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use uhc\game\scenarios\ScenarioIds;
+use uhc\game\team\TeamManager;
 use uhc\libs\form\CustomForm;
 use uhc\libs\form\SimpleForm;
 use uhc\Main;
@@ -19,10 +20,9 @@ class ConfigItem extends Item {
 
     public function __construct() {
         parent::__construct(new ItemIdentifier(ItemTypeIds::NETHER_STAR), "Config");
-    }
+        $this->setCustomName("Config");
+        $this->setLore(["UI to config the game."]);
 
-    public function getCustomName() : string {
-        return "Config";
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector, array &$returnedItems) : ItemUseResult {
@@ -39,10 +39,15 @@ class ConfigItem extends Item {
             if ($data === null) return;
             switch ($data) {
                 case 0:
-                    $this->sendMenuConfigForm($player);
+                    $this->sendSettingsForm($player);
                     break;
                 case 1:
                     $this->sendScenariosForm($player);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    Main::getGame()->start();
                     break;
             }
         });
@@ -52,6 +57,7 @@ class ConfigItem extends Item {
         $form->addButton("Paramètres");
         $form->addButton("Scénarios");
         $form->addButton("Résumé");
+        $form->addButton( TextFormat::GREEN . "Start");
         $form->addButton(TextFormat::RED . "Quit");
 
         $player->sendForm($form);
@@ -73,15 +79,31 @@ class ConfigItem extends Item {
 
     private function sendTeamsForm(UPlayer $player) : void {
         $form = new CustomForm(function (UPlayer $player, $data) {
-            if($data === null) {
+            if(count($data) === 0) {
                 $this->sendSettingsForm($player);
                 return;
             }
 
+            $teams = Main::getGame()->getTeams();
 
+            if(!$teams->setNumberOfEnabledTeams($data[0])) {
+                $player->sendMessage("Nomnre d'équipe invalide.");
+                return;
+            }
+
+            if(!$teams->setMaxPlayersPerTeam($data[1])) {
+                $player->sendMessage("Nombre de joueur maximum par équipe invalide.");
+            }
+
+            //Random teams part
         });
 
         $form->setTitle("Paramètre des équipes Equipes");
+        $form->addSlider("Nombre d'équipes :", TeamManager::getMinTeamsBasedOnOnlinePlayers(), TeamManager::getMaxTeamsBasedOnOnlinePlayers());
+        $form->addSlider("Nombre maximum de joueurs par équipes :", TeamManager::MIN_TEAMS, TeamManager::MAX_TEAMS);
+        $form->addDropdown("Equipes aléatoires :", ["OFF", "ON"], 0);
+
+        $player->sendForm($form);
     }
 
     private function sendScenariosForm(UPlayer $player) : void {
