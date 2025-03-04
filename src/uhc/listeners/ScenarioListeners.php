@@ -22,11 +22,8 @@ use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerItemEnchantEvent;
-<<<<<<< HEAD
 use pocketmine\event\player\PlayerMoveEvent;
-=======
 use pocketmine\event\player\PlayerItemHeldEvent;
->>>>>>> c2c2acd910a084ce9ac409f121b769bb347aeecd
 use pocketmine\item\Axe;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
