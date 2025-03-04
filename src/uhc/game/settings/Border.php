@@ -41,4 +41,8 @@ class Border {
     public function getSize() : int {
         return $this->size;
     }
+
+    public function setSize(int $size) : void {
+        $this->size = $size;
+    }
 }
