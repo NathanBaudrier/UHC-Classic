@@ -1,0 +1,24 @@
+# === Php related ===
+vendor/
+composer.lock
+*.log
+*.cache
+
+# === IDEs ===
+
+# PHPStorm
+.idea/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# === macOS ===
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# === Windows ===
+Thumbs.db
+ehthumbs.db
+Desktop.ini
