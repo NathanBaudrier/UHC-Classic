@@ -37,8 +37,8 @@ class Game {
     private ?DamageCycle $damageCycle = null;
     private DoorManager $doors;
 
-    public function __construct() {
-        $this->main = Main::getInstance();
+    public function __construct(Main $main) {
+        $this->main = $main;
         $this->duration = new Time();
         $this->border = new Border();
         $this->teams = new TeamManager();

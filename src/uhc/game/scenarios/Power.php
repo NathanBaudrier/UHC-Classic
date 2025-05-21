@@ -12,7 +12,7 @@ class Power {
 
     private int $id;
 
-    public function __construct(int $id) {
+    public function __construct() {
         $this->id = rand(self::STRENGTH_POWER, self::DOUBLE_LIFE_POWER);
     }
 
@@ -27,6 +27,16 @@ class Power {
             self::JUMP_BOOST_POWER => "Saut Boosté",
             self::SPEED_POWER => "Vitesse",
             self::DOUBLE_LIFE_POWER => "Double Vie"
+        };
+    }
+
+    public function getDescription(int $power) : string {
+        return match ($power) {
+            self::STRENGTH_POWER => "",
+            self::RESISTANCE_POWER => "",
+            self::JUMP_BOOST_POWER => "",
+            self::SPEED_POWER => "",
+            self::DOUBLE_LIFE_POWER => ""
         };
     }
 }

@@ -76,18 +76,6 @@ class ScenarioListeners implements Listener {
         $scenarios = $this->game->getScenarios();
 
         if($scenarios->getById($scenarios::HASTEY_BOYS_ID)?->isEnabled()) {
-            if(
-                $item instanceof Axe
-                ||
-                $item instanceof Pickaxe
-                ||
-                $item instanceof Hoe
-                ||
-                $item instanceof Shovel
-            ) {
-                $item->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 4));
-                $player->getInventory()->setItemInHand($item);
-            }
         }
     }
 
@@ -101,41 +89,8 @@ class ScenarioListeners implements Listener {
 
             switch (true) {
                 case $scenarios->getById($scenarios::VANILLA_PLUS_ID)?->isEnabled():
-                    $random = rand(0, 100);
-
-                    if($block->getTypeId() == BlockTypeIds::OAK_LEAVES || $block->getTypeId() == BlockTypeIds::DARK_OAK_LEAVES) {
-                        if($random <= 20) $event->setDrops([VanillaItems::APPLE()]);
-                    } else if($block->getTypeId() == BlockTypeIds::GRAVEL) {
-                        if($random <= 20) $event->setDrops([VanillaItems::FLINT()]);
-                    }
 
                 case $scenarios->getById($scenarios::TIMBER_ID)?->isEnabled():
-                    $world = $block->getPosition()->getWorld();
-
-                    if(($block->getTypeId() == BlockTypeIds::OAK_LOG || $block->getTypeId() == BlockTypeIds::BIRCH_LOG) && count($event->getDrops()) != 0) {
-                        var_dump("TIMBER OK");
-                        for($y = $block->getPosition()->getY() + 1;
-                            (
-                                $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add(0, 1, 0))
-                            )
-                                ->getTypeId() == BlockTypeIds::OAK_LOG || $nextBlock->getTypeId() == BlockTypeIds::BIRCH_LOG;
-                            $y++
-                        ) {
-                            $world->setBlock($nextBlock->getPosition()->asVector3(), VanillaBlocks::AIR());
-                            $world->dropItem($nextBlock->getPosition()->asVector3(), $event->getDrops()[0]);
-                        }
-
-                        for($y = $block->getPosition()->getY() - 1;
-                            (
-                            $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add(0, -1, 0))
-                            )
-                                ->getTypeId() == BlockTypeIds::OAK_LOG || $nextBlock->getTypeId() == BlockTypeIds::BIRCH_LOG;
-                            $y--
-                        ) {
-                            $world->setBlock($nextBlock->getPosition()->asVector3(), VanillaBlocks::AIR());
-                            $world->dropItem($nextBlock->getPosition()->asVector3(), $event->getDrops()[0]);
-                        }
-                    }
 
                 case $scenarios->getById($scenarios::CUT_CLEAN_ID)->isEnabled():
                     if($block instanceof IronOre) {

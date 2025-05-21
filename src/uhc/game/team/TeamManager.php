@@ -24,7 +24,7 @@ class TeamManager implements TeamIds {
         $this->init();
     }
 
-    public function init() : void {
+    private function init() : void {
         $this->teams[] = new Team(self::RED, "Red", TextFormat::RED, "blocks/concrete_powder_red.png");
         $this->teams[] = new Team(self::DARK_RED, "Dark Red", TextFormat::DARK_RED, "blocks/concrete_red.png");
         $this->teams[] = new Team(self::GOLD, "Gold", TextFormat::GOLD, "blocks/concrete_yellow.png");
