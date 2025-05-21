@@ -7,6 +7,7 @@ use pocketmine\math\Vector3;
 use pocketmine\player\GameMode;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\format\Chunk;
+use uhc\game\scenarios\DamageCycle;
 use uhc\game\scenarios\manager\DoorManager;
 use uhc\game\scenarios\ScenarioManager;
 use uhc\game\settings\Border;
@@ -14,7 +15,6 @@ use uhc\game\team\TeamManager;
 use uhc\Main;
 use uhc\tasks\UpdateTimeTask;
 use uhc\UPlayer;
-use uhc\utils\scenarios\DamageCycle;
 use uhc\utils\Time;
 
 class Game {
@@ -37,8 +37,8 @@ class Game {
     private ?DamageCycle $damageCycle = null;
     private DoorManager $doors;
 
-    public function __construct() {
-        $this->main = Main::getInstance();
+    public function __construct(Main $main) {
+        $this->main = $main;
         $this->duration = new Time();
         $this->border = new Border();
         $this->teams = new TeamManager();
