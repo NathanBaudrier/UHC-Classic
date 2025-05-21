@@ -2,30 +2,19 @@
 
 namespace uhc\game\scenarios;
 
-class Scenario {
+use pocketmine\event\Event;
 
-    private int $id;
-    private string $name;
-    private string $description;
+abstract class Scenario implements ScenarioIds {
     private bool $enabled = false;
 
     public function __construct(int $id, string $name, string $description) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->description = $description;
     }
 
-    public function getId() : int {
-        return $this->id;
-    }
+    abstract public function getId() : int;
 
-    public function getName() : string {
-        return $this->name;
-    }
+    abstract public function getName() : string;
 
-    public function getDescription() : string {
-        return $this->description;
-    }
+    abstract public function getDescription() : string;
 
     public function isEnabled() : bool {
         return $this->enabled;
@@ -38,4 +27,6 @@ class Scenario {
     public function disable() : void {
         $this->enabled = false;
     }
+
+    abstract function onEvent(Event $event) : void;
 }

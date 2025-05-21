@@ -1,6 +1,6 @@
 <?php
 
-namespace uhc\utils\scenarios;
+namespace uhc\game\scenarios;
 
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\utils\TextFormat;

@@ -12,7 +12,7 @@ class Power {
 
     private int $id;
 
-    public function __construct(int $id) {
+    public function __construct() {
         $this->id = rand(self::STRENGTH_POWER, self::DOUBLE_LIFE_POWER);
     }
 
