@@ -10,11 +10,11 @@ use uhc\listeners\ScenarioListeners;
 class Main extends PluginBase {
 
     private static self $instance;
-    private static Game $game;
+    private Game $game;
 
     public function onEnable() : void {
         self::$instance = $this;
-        self::$game = new Game($this);
+        $this->game = new Game($this);
 
         $this->getServer()->getPluginManager()->registerEvents(new PlayerListeners(self::$game), $this);
         $this->getServer()->getPluginManager()->registerEvents(new ScenarioListeners(self::$game), $this);
@@ -24,7 +24,7 @@ class Main extends PluginBase {
         return self::$instance;
     }
 
-    public static function getGame() : Game {
-        return self::$game;
+    public function getGame() : Game {
+        return $this->game;
     }
 }
