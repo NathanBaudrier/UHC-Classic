@@ -38,11 +38,11 @@ class Border {
         $this->speed = $speed;
     }
 
-    public function getSize() : int {
+    public function getCurrentSize() : int {
         return $this->size;
     }
 
-    public function setSize(int $size) : void {
+    public function setCurrentSize(int $size) : void {
         $this->size = $size;
     }
 }
