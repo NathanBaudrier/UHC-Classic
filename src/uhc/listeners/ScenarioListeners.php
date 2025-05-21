@@ -22,8 +22,8 @@ use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerItemEnchantEvent;
-use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
+use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\item\Axe;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
@@ -36,11 +36,11 @@ use pocketmine\scheduler\ClosureTask;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use uhc\game\Game;
+use uhc\game\scenarios\DamageCycle;
 use uhc\listeners\custom\NewDamageCycleEvent;
 use uhc\listeners\custom\UPlayerDeathEvent;
 use uhc\Main;
 use uhc\UPlayer;
-use uhc\utils\scenarios\DamageCycle;
 
 class ScenarioListeners implements Listener {
 
@@ -263,10 +263,6 @@ class ScenarioListeners implements Listener {
             TextFormat::WHITE . "[" . TextFormat::YELLOW . "DamageCycle" . TextFormat::WHITE . "] " . TextFormat::BOLD . $game->getDamageCycle()->getName() . "\n" .
             $game->getDamageCycle()->getDescription()
         );
-
-        if($event->getLastCycle() != null) {
-            Server::getInstance()->broadcastMessage("(" . $game->getDamageCycle()->getDeaths() . " joueurs sont mort à cause du cycle précédent.)");
-        }
     }
 
     public function onPlace(BlockPlaceEvent $event) : void {

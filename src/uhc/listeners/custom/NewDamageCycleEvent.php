@@ -3,17 +3,17 @@
 namespace uhc\listeners\custom;
 
 use pocketmine\event\Event;
-use uhc\utils\scenarios\DamageCycle;
+use uhc\game\scenarios\DamageCycle;
 
 class NewDamageCycleEvent extends Event {
 
-    private ?DamageCycle $lastCycle;
+    private ?DamageCycle $cycle;
 
-    public function __construct(?DamageCycle $lastCycle) {
-        $this->lastCycle = $lastCycle;
+    public function __construct(?DamageCycle $cycle) {
+        $this->cycle = $cycle;
     }
 
-    public function getLastCycle(): ?DamageCycle {
-        return $this->lastCycle;
+    public function getCycle(): ?DamageCycle {
+        return $this->cycle;
     }
 }

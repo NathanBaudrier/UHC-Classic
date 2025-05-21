@@ -2,7 +2,7 @@
 
 namespace uhc\game\scenarios;
 
-class Scenario {
+abstract class Scenario implements ScenarioIds {
 
     private int $id;
     private string $name;
@@ -15,13 +15,9 @@ class Scenario {
         $this->description = $description;
     }
 
-    public function getId() : int {
-        return $this->id;
-    }
+    abstract public function getId() : int;
 
-    public function getName() : string {
-        return $this->name;
-    }
+    abstract public function getName() : string;
 
     public function getDescription() : string {
         return $this->description;
