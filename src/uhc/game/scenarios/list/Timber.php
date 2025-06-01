@@ -3,10 +3,10 @@
 namespace uhc\game\scenarios\list;
 
 use pocketmine\block\BlockTypeIds;
-use pocketmine\block\VanillaBlocks;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Event;
 use uhc\game\scenarios\Scenario;
+use uhc\utils\Utils;
 
 class Timber extends Scenario {
 
@@ -19,37 +19,15 @@ class Timber extends Scenario {
     }
 
     public function getDescription() : string {
-        return "";
+        return "Timber";
     }
 
     public function onEvent(Event $event) : void {
         if(!$event instanceof BlockBreakEvent) return;
 
         $block = $event->getBlock();
-        $world = $block->getPosition()->getWorld();
-
-        if(($block->getTypeId() == BlockTypeIds::OAK_LOG || $block->getTypeId() == BlockTypeIds::BIRCH_LOG) && count($event->getDrops()) != 0) {
-            for($y = $block->getPosition()->getY() + 1;
-                (
-                $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add(0, 1, 0))
-                )
-                    ->getTypeId() == BlockTypeIds::OAK_LOG || $nextBlock->getTypeId() == BlockTypeIds::BIRCH_LOG;
-                $y++
-            ) {
-                $world->setBlock($nextBlock->getPosition()->asVector3(), VanillaBlocks::AIR());
-                $world->dropItem($nextBlock->getPosition()->asVector3(), $event->getDrops()[0]);
-            }
-
-            for($y = $block->getPosition()->getY() - 1;
-                (
-                $nextBlock = $world->getBlock($block->getPosition()->asVector3()->add(0, -1, 0))
-                )
-                    ->getTypeId() == BlockTypeIds::OAK_LOG || $nextBlock->getTypeId() == BlockTypeIds::BIRCH_LOG;
-                $y--
-            ) {
-                $world->setBlock($nextBlock->getPosition()->asVector3(), VanillaBlocks::AIR());
-                $world->dropItem($nextBlock->getPosition()->asVector3(), $event->getDrops()[0]);
-            }
+        if($block->getTypeId() == BlockTypeIds::OAK_WOOD || $block->getTypeId() == BlockTypeIds::BIRCH_WOOD) {
+            Utils::mineConnectedBlocks($block, $block->getTypeId());
         }
     }
 }

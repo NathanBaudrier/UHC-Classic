@@ -2,10 +2,14 @@
 
 namespace uhc\game\scenarios;
 
-use uhc\game\scenario\list\HasteyBoys;
 use uhc\game\scenarios\list\FinalHeal;
+use uhc\game\scenarios\list\NoCleanUp;
 use uhc\game\scenarios\list\Timber;
 use uhc\game\scenarios\list\VanillaPlus;
+use uhc\game\scenarios\list\BloodDiamond;
+use uhc\game\scenarios\list\BloodEnchant;
+use uhc\game\scenarios\list\CatEyes;
+use uhc\game\scenarios\list\VeinMiner;
 
 class ScenarioManager implements ScenarioIds {
 
@@ -18,11 +22,19 @@ class ScenarioManager implements ScenarioIds {
         $this->init();
     }
 
-    private function init() : void {
+    public function init() : void {
         $this->scenarios[] = new FinalHeal();
+        $this->scenarios[] = new CatEyes();
         $this->scenarios[] = new VanillaPlus();
         $this->scenarios[] = new Timber();
-        $this->scenarios[] = new HasteyBoys();
+        //HasteyBoys
+        $this->scenarios[] = new BloodDiamond();
+        $this->scenarios[] = new BloodEnchant();
+        //BloodFusion
+        //Bookception
+        //BowSee
+        $this->scenarios[] = new NoCleanUp();
+        $this->scenarios[] = new VeinMiner();
     }
 
     /**

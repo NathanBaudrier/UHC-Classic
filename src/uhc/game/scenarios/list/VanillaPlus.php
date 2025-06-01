@@ -7,7 +7,6 @@ use pocketmine\block\Gravel;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Event;
 use pocketmine\item\VanillaItems;
-
 use uhc\game\scenarios\Scenario;
 
 class VanillaPlus extends Scenario {
@@ -21,22 +20,21 @@ class VanillaPlus extends Scenario {
     }
 
     public function getDescription() : string {
-        return "";
+        return "Vanilla+";
     }
 
     public function onEvent(Event $event) : void {
         if(!$event instanceof BlockBreakEvent) return;
 
         $block = $event->getBlock();
+        $random = rand(1, 5);
 
-        $random = rand(0, 100);
+        if($random != 1) return;
 
-        if($random <= 20) {
-            if($block->getTypeId() == BlockTypeIds::OAK_LEAVES || $block->getTypeId() == BlockTypeIds::DARK_OAK_LEAVES) {
-                $event->setDrops([VanillaItems::APPLE()]);
-            } else if($block instanceof Gravel) {
-                $event->setDrops([VanillaItems::FLINT()]);
-            }
+        if($block instanceof Gravel) {
+            $event->setDrops([VanillaItems::FLINT()]);
+        } else if($block->getTypeId() == BlockTypeIds::OAK_LEAVES || $block->getTypeId() == BlockTypeIds::DARK_OAK_LEAVES) {
+            $event->setDrops([VanillaItems::APPLE()]);
         }
     }
 }

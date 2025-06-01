@@ -3,7 +3,6 @@
 namespace uhc\game\scenarios\list;
 
 use pocketmine\event\Event;
-use uhc\game\Game;
 use uhc\game\scenarios\Scenario;
 use uhc\listeners\custom\PvpEnabledEvent;
 use uhc\Main;
@@ -25,8 +24,7 @@ class FinalHeal extends Scenario {
     public function onEvent(Event $event) : void {
         if(!$event instanceof PvpEnabledEvent) return;
 
-        $game = Main::getInstance()->getGame();
-        foreach($game->getPlayers() as $player) {
+        foreach(Main::getInstance()->getGame()->getPlayers() as $player) {
             $player->setHealth($player->getMaxHealth());
         }
     }
