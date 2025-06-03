@@ -16,8 +16,8 @@ class Main extends PluginBase {
         self::$instance = $this;
         $this->game = new Game($this);
 
-        $this->getServer()->getPluginManager()->registerEvents(new PlayerListeners(self::$game), $this);
-        $this->getServer()->getPluginManager()->registerEvents(new ScenarioListeners(self::$game), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new PlayerListeners($this->game), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new ScenarioListeners($this->game), $this);
     }
 
     public static function getInstance() : self {

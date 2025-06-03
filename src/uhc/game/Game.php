@@ -61,21 +61,23 @@ class Game {
             //Do random team
         }
 
+        /*
         if($this->scenarios->getById($this->scenarios::ANONYMOUS_ID)->isEnabled()) {
             foreach($this->players as $player) {
                 $player->setDisplayName(TextFormat::OBFUSCATED . "MONKEY" . TextFormat::RESET);
                 //$player->setSkin(); TODO
             }
         }
+        */
 
         foreach ($this->players as $player) {
-            $randomX = rand(-$this->border->getSize(), $this->border->getSize());
-            $randomZ = rand(-$this->border->getSize(), $this->border->getSize());
+            $randomX = rand(-$this->border->getCurrentSize(), $this->border->getCurrentSize());
+            $randomZ = rand(-$this->border->getCurrentSize(), $this->border->getCurrentSize());
             $world = Main::getInstance()->getServer()->getWorldManager()->getDefaultWorld();
 
             $world->orderChunkPopulation($randomX >> Chunk::COORD_BIT_SIZE, $randomZ >> Chunk::COORD_BIT_SIZE, null)->onCompletion(
                 function (Chunk $chunk) use ($randomX, $randomZ, $world, $player): void {
-                    $player->teleport(new Vector3($randomX, $world->getHighestBlockAt($randomX, $randomZ), $randomZ));
+                    $player->teleport(new Vector3($randomX, $world->getHighestBlockAt($randomX, $randomZ) + 1, $randomZ));
                     $player->getInventory()->setContents($this->getStarterKit());
                     $player->setHealth($player->getMaxHealth());
                     $player->setGamemode(GameMode::SURVIVAL);

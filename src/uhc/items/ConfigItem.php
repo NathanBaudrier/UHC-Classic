@@ -9,6 +9,7 @@ use pocketmine\item\ItemUseResult;
 use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use uhc\game\Game;
 use uhc\game\scenarios\ScenarioIds;
 use uhc\game\team\TeamManager;
 use uhc\libs\form\CustomForm;
@@ -18,15 +19,20 @@ use uhc\UPlayer;
 
 class ConfigItem extends Item {
 
+    private Game $game;
+
     public function __construct() {
         parent::__construct(new ItemIdentifier(ItemTypeIds::NETHER_STAR), "Config");
+
+        $this->game = Main::getInstance()->getGame();
+
         $this->setCustomName("Config");
         $this->setLore(["UI to config the game."]);
 
     }
 
     public function onClickAir(Player $player, Vector3 $directionVector, array &$returnedItems) : ItemUseResult {
-        if($player instanceof UPlayer /* && $player->isHost()*/ && !Main::getGame()->hasStarted()) {
+        if($player instanceof UPlayer /* && $player->isHost()*/ && !$this->game->hasStarted()) {
             $this->sendMenuConfigForm($player);
             return ItemUseResult::SUCCESS;
         }
@@ -47,7 +53,7 @@ class ConfigItem extends Item {
                 case 2:
                     break;
                 case 3:
-                    Main::getGame()->start();
+                    $this->game->start();
                     break;
             }
         });
@@ -84,7 +90,7 @@ class ConfigItem extends Item {
                 return;
             }
 
-            $teams = Main::getGame()->getTeams();
+            $teams = $this->game->getTeams();
 
             if(!$teams->setNumberOfEnabledTeams($data[0])) {
                 $player->sendMessage("Nomnre d'équipe invalide.");
@@ -110,7 +116,7 @@ class ConfigItem extends Item {
         $form = new SimpleForm(function (UPlayer $player, $data) {
             if($data === null) return;
 
-            $scenario = Main::getGame()->getScenarios()->getById($data);
+            $scenario = $this->game->getScenarios()->getById($data);
 
             if($scenario->getId() == ScenarioIds::ASSAULT_AND_BATTERY_ID) {
                 $player->sendMessage("Ce scénario ne peut être activé que si des équipes de 2 uniquement sont activées.");
@@ -119,12 +125,12 @@ class ConfigItem extends Item {
 
             $scenario->isEnabled() ? $scenario->disable() : $scenario->enable();
 
-            $this->sendMenuConfigForm($player);
+            $this->sendScenariosForm($player);
         });
 
         $form->setTitle(TextFormat::YELLOW . "Scénarios de la partie");
         $form->setContent("Choisissez un scénarios à activer/désactiver :");
-        foreach (Main::getGame()->getScenarios()->getSorted() as $scenario) {
+        foreach ($this->game->getScenarios()->getSorted() as $scenario) {
             $form->addButton(($scenario->isEnabled() ? TextFormat::GREEN : TextFormat::RED) . $scenario->getName(), -1, "", $scenario->getId());
         }
 
