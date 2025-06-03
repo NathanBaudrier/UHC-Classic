@@ -11,18 +11,18 @@ use pocketmine\item\MilkBucket;
 use uhc\game\scenarios\Scenario;
 use uhc\Main;
 
-class CatEyes extends Scenario {
+class CatEyesScenario extends Scenario {
 
     public function getId() : int {
         return self::CAT_EYES_ID;
     }
 
     public function getName() : string {
-        return "CatEyes";
+        return "CatEyesScenario";
     }
 
     public function getDescription() : string {
-        return "CatEyes";
+        return "CatEyesScenario";
     }
 
     public function onEvent(Event $event) : void {

@@ -6,20 +6,19 @@ use pocketmine\block\BlockTypeIds;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Event;
 use uhc\game\scenarios\Scenario;
-use uhc\utils\Utils;
 
-class VeinMiner extends Scenario {
+class DoubleOrNothingScenario extends Scenario {
 
     public function getId() : int {
-        return self::VEIN_MINER_ID;
+        return self::DOUBLE_OR_NOTHING_ID;
     }
 
     public function getName() : string {
-        return "Vein Miner";
+        return "Double Or Nothing";
     }
 
     public function getDescription() : string {
-        return "Vein Miner";
+        return "Double Or Nothing";
     }
 
     public function onEvent(Event $event) : void {
@@ -35,6 +34,9 @@ class VeinMiner extends Scenario {
             BlockTypeIds::DIAMOND_ORE,
         ];
 
-        if(in_array($block->getTypeId(), $validOres)) Utils::mineConnectedBlocks($block, $block->getTypeId());
+        if(in_array($block->getTypeId(), $validOres)) {
+            rand(0, 1) ? $event->setDrops(array_map(function ($item) {
+                return $item->setCount($item->getCount() * 2); }, $event->getDrops())) : $event->setDrops([]);
+        }
     }
 }

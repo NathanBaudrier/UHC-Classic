@@ -6,9 +6,8 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\utils\TextFormat;
 
 class DamageCycle {
-    private const PREFIX = TextFormat::WHITE . "[" . TextFormat::YELLOW . TextFormat::BOLD . "INFO" . TextFormat::RESET . TextFormat::WHITE . "] ";
+    private const string PREFIX = TextFormat::WHITE . "[" . TextFormat::YELLOW . TextFormat::BOLD . "INFO" . TextFormat::RESET . TextFormat::WHITE . "] ";
     private int $cause;
-    private int $deaths = 0;
 
     public function __construct(int $cause) {
         $this->cause = $cause;
@@ -103,15 +102,7 @@ class DamageCycle {
         return $description;
     }
 
-    public function getDeaths() : int {
-        return $this->deaths;
-    }
-
-    public function addDeath() : void {
-        $this->deaths++;
-    }
-
-    public static function generateNew() : self {
+    public function generateNew() : self {
         return new self(array_rand(
             [
                 EntityDamageEvent::CAUSE_ENTITY_ATTACK,

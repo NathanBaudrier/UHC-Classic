@@ -11,9 +11,10 @@ use pocketmine\item\Hoe;
 use pocketmine\item\Pickaxe;
 use pocketmine\item\Shovel;
 
+use pocketmine\item\TieredTool;
 use uhc\game\scenarios\Scenario;
 
-class HasteyBoys extends Scenario {
+class HasteyBoysScenario extends Scenario {
 
     public function getId() : int {
         return self::HASTEY_BOYS_ID;
@@ -24,7 +25,7 @@ class HasteyBoys extends Scenario {
     }
 
     public function getDescription() : string {
-        return "";
+        return "Hastey Boys";
     }
 
     public function onEvent(Event $event) : void {
@@ -33,15 +34,8 @@ class HasteyBoys extends Scenario {
         $player = $event->getPlayer();
         $item = $event->getItem();
 
-        if(
-            $item instanceof Axe
-            ||
-            $item instanceof Pickaxe
-            ||
-            $item instanceof Hoe
-            ||
-            $item instanceof Shovel
-        ) {
+
+        if($item instanceof TieredTool) {
             $item->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 4));
             $player->getInventory()->setItemInHand($item);
         }

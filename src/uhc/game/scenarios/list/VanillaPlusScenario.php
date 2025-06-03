@@ -9,7 +9,7 @@ use pocketmine\event\Event;
 use pocketmine\item\VanillaItems;
 use uhc\game\scenarios\Scenario;
 
-class VanillaPlus extends Scenario {
+class VanillaPlusScenario extends Scenario {
 
     public function getId() : int {
         return self::VANILLA_PLUS_ID;

@@ -2,8 +2,8 @@
 
 namespace uhc\listeners\custom;
 
-use uhc\utils\Time;
 use pocketmine\event\Event;
+use uhc\utils\Time;
 
 class PvpEnabledEvent extends Event {
 

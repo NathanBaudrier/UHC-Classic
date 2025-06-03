@@ -8,7 +8,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Event;
 use uhc\game\scenarios\Scenario;
 
-class BloodDiamond extends Scenario {
+class BloodDiamondScenario extends Scenario {
 
     public function getId() : int {
         return self::BLOOD_DIAMOND_ID;

@@ -8,18 +8,18 @@ use pocketmine\event\Event;
 use uhc\game\scenarios\Scenario;
 use uhc\utils\Utils;
 
-class Timber extends Scenario {
+class TimberScenario extends Scenario {
 
     public function getId() : int {
         return self::TIMBER_ID;
     }
 
     public function getName() : string {
-        return "Timber";
+        return "TimberScenario";
     }
 
     public function getDescription() : string {
-        return "Timber";
+        return "TimberScenario";
     }
 
     public function onEvent(Event $event) : void {

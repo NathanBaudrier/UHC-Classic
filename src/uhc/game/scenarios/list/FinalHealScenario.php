@@ -7,7 +7,7 @@ use uhc\game\scenarios\Scenario;
 use uhc\listeners\custom\PvpEnabledEvent;
 use uhc\Main;
 
-class FinalHeal extends Scenario {
+class FinalHealScenario extends Scenario {
 
     public function getId() : int {
         return self::FINAL_HEAL_ID;
@@ -18,7 +18,7 @@ class FinalHeal extends Scenario {
     }
 
     public function getDescription() : string {
-        return "";
+        return "Final Heal";
     }
 
     public function onEvent(Event $event) : void {

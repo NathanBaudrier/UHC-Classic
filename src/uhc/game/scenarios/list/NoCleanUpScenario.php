@@ -6,7 +6,7 @@ use pocketmine\event\Event;
 use uhc\game\scenarios\Scenario;
 use uhc\listeners\custom\UPlayerDeathEvent;
 
-class NoCleanUp extends Scenario {
+class NoCleanUpScenario extends Scenario {
 
     public function getId() : int {
         return self::NO_CLEAN_UP_ID;
@@ -23,6 +23,6 @@ class NoCleanUp extends Scenario {
     public function onEvent(Event $event) : void {
         if(!$event instanceof UPlayerDeathEvent) return;
 
-        $event->getKiller()?->setHealth($event->getKiller()?->getMaxHealth());
+        $event->getKiller()?->setHealth($event->getKiller()->getMaxHealth() / 2);
     }
 }

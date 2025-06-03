@@ -2,14 +2,24 @@
 
 namespace uhc\game\scenarios;
 
-use uhc\game\scenarios\list\FinalHeal;
-use uhc\game\scenarios\list\NoCleanUp;
-use uhc\game\scenarios\list\Timber;
-use uhc\game\scenarios\list\VanillaPlus;
-use uhc\game\scenarios\list\BloodDiamond;
-use uhc\game\scenarios\list\BloodEnchant;
-use uhc\game\scenarios\list\CatEyes;
-use uhc\game\scenarios\list\VeinMiner;
+use uhc\game\scenarios\list\AutoBreakScenario;
+use uhc\game\scenarios\list\BowSeeScenario;
+use uhc\game\scenarios\list\BowSwapScenario;
+use uhc\game\scenarios\list\CrippleScenario;
+use uhc\game\scenarios\list\CutCleanScenario;
+use uhc\game\scenarios\list\DamageCycleScenario;
+use uhc\game\scenarios\list\FastGatewayScenario;
+use uhc\game\scenarios\list\FinalHealScenario;
+use uhc\game\scenarios\list\HasteyBoysScenario;
+use uhc\game\scenarios\list\LongShotScenario;
+use uhc\game\scenarios\list\NoCleanUpScenario;
+use uhc\game\scenarios\list\ParanoiaScenario;
+use uhc\game\scenarios\list\TimberScenario;
+use uhc\game\scenarios\list\VanillaPlusScenario;
+use uhc\game\scenarios\list\BloodDiamondScenario;
+use uhc\game\scenarios\list\BloodEnchantScenario;
+use uhc\game\scenarios\list\CatEyesScenario;
+use uhc\game\scenarios\list\VeinMinerScenario;
 
 class ScenarioManager implements ScenarioIds {
 
@@ -23,18 +33,36 @@ class ScenarioManager implements ScenarioIds {
     }
 
     public function init() : void {
-        $this->scenarios[] = new FinalHeal();
-        $this->scenarios[] = new CatEyes();
-        $this->scenarios[] = new VanillaPlus();
-        $this->scenarios[] = new Timber();
-        //HasteyBoys
-        $this->scenarios[] = new BloodDiamond();
-        $this->scenarios[] = new BloodEnchant();
+        $this->scenarios[] = new FinalHealScenario();
+        $this->scenarios[] = new CatEyesScenario();
+        $this->scenarios[] = new VanillaPlusScenario();
+        $this->scenarios[] = new TimberScenario();
+        $this->scenarios[] = new HasteyBoysScenario();
+        $this->scenarios[] = new BloodDiamondScenario();
+        $this->scenarios[] = new BloodEnchantScenario();
         //BloodFusion
         //Bookception
-        //BowSee
-        $this->scenarios[] = new NoCleanUp();
-        $this->scenarios[] = new VeinMiner();
+        $this->scenarios[] = new BowSeeScenario();
+        $this->scenarios[] = new NoCleanUpScenario();
+        //TimeBomb
+        $this->scenarios[] = new CutCleanScenario();
+        $this->scenarios[] = new BowSwapScenario();
+        $this->scenarios[] = new FastGatewayScenario();
+        $this->scenarios[] = new LongShotScenario();
+        //Blocked
+        //BenchBlitz
+        $this->scenarios[] = new DamageCycleScenario();
+        //Monster&Cie
+        //SharedLife
+        $this->scenarios[] = new ParanoiaScenario();
+        //NineSlots
+        //BackPack
+        //MysteryTeam
+        //RockPaperScissors
+        $this->scenarios[] = new AutoBreakScenario();
+        $this->scenarios[] = new CrippleScenario();
+        //SuperHeroes
+        $this->scenarios[] = new VeinMinerScenario();
     }
 
     /**

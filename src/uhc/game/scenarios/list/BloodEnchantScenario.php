@@ -7,7 +7,7 @@ use pocketmine\event\Event;
 use pocketmine\event\player\PlayerItemEnchantEvent;
 use uhc\game\scenarios\Scenario;
 
-class BloodEnchant extends Scenario {
+class BloodEnchantScenario extends Scenario {
 
     public function getId() : int {
         return self::BLOOD_ENCHANT_ID;
