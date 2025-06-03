@@ -2,16 +2,15 @@
 
 namespace uhc\game\scenarios\list;
 
+use pocketmine\block\inventory\CraftingTableInventory;
 use pocketmine\event\Event;
-use pocketmine\event\player\PlayerItemHeldEvent;
-use pocketmine\item\Axe;
+use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
-use pocketmine\item\Hoe;
-use pocketmine\item\Pickaxe;
-use pocketmine\item\Shovel;
-
+use pocketmine\item\Sword;
 use pocketmine\item\TieredTool;
+use pocketmine\player\GameMode;
+
 use uhc\game\scenarios\Scenario;
 
 class HasteyBoysScenario extends Scenario {
@@ -29,15 +28,31 @@ class HasteyBoysScenario extends Scenario {
     }
 
     public function onEvent(Event $event) : void {
-        if(!$event instanceof PlayerItemHeldEvent) return;
+        if(!$event instanceof CraftItemEvent) return;
 
         $player = $event->getPlayer();
-        $item = $event->getItem();
 
+        if($player->getGamemode() !== GameMode::SURVIVAL) return;
 
-        if($item instanceof TieredTool) {
-            $item->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 4));
-            $player->getInventory()->setItemInHand($item);
+        foreach($event->getOutputs() as $item) {
+            if($item instanceof TieredTool && !$item instanceof Sword) {
+
+                $item->addEnchantment(new EnchantmentInstance(VanillaEnchantments::EFFICIENCY(), 5));
+
+                if($player->getInventory()->canAddItem($item)) {
+                    $player->getInventory()->addItem($item);
+
+                    $event->cancel();
+
+                    foreach($event->getTransaction()->getInventories() as $inventory) {
+                        if($inventory instanceof CraftingTableInventory) {
+                            $inventory->clearAll();
+                        }
+                    }
+
+                    break;
+                }
+            }
         }
     }
 }

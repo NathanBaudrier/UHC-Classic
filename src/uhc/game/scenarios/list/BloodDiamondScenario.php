@@ -6,6 +6,8 @@ use pocketmine\block\DiamondOre;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Event;
+use pocketmine\player\GameMode;
+
 use uhc\game\scenarios\Scenario;
 
 class BloodDiamondScenario extends Scenario {
@@ -24,6 +26,7 @@ class BloodDiamondScenario extends Scenario {
 
     public function onEvent(Event $event) : void {
         if(!$event instanceof BlockBreakEvent) return;
+        if($event->getPlayer()->getGamemode() !== GameMode::SURVIVAL()) return;
         if(!$event->getBlock() instanceof DiamondOre) return;
 
         $player = $event->getPlayer();

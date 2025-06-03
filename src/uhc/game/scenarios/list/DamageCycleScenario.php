@@ -4,6 +4,7 @@ namespace uhc\game\scenarios\list;
 
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Event;
+use pocketmine\player\GameMode;
 use pocketmine\utils\TextFormat;
 use uhc\game\scenarios\Scenario;
 use uhc\listeners\custom\NewDamageCycleEvent;
@@ -33,6 +34,7 @@ class DamageCycleScenario extends Scenario {
             );
         } else if($event instanceof EntityDamageEvent) {
             if(!($player = $event->getEntity()) instanceof UPlayer) return;
+            if($player->getGamemode() !== GameMode::SURVIVAL()) return;
 
             if($event->getCause() == Main::getInstance()->getGame()->getDamageCycle()->getCause()) $player->kill();
         }

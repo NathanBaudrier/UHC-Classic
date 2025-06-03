@@ -5,6 +5,7 @@ namespace uhc\game\scenarios\list;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Event;
+use pocketmine\player\GameMode;
 use uhc\game\scenarios\Scenario;
 
 class DoubleOrNothingScenario extends Scenario {
@@ -23,6 +24,7 @@ class DoubleOrNothingScenario extends Scenario {
 
     public function onEvent(Event $event) : void {
         if(!$event instanceof BlockBreakEvent) return;
+        if($event->getPlayer()->getGamemode() !== GameMode::SURVIVAL()) return;
 
         $block = $event->getBlock();
         $validOres = [
@@ -35,8 +37,14 @@ class DoubleOrNothingScenario extends Scenario {
         ];
 
         if(in_array($block->getTypeId(), $validOres)) {
-            rand(0, 1) ? $event->setDrops(array_map(function ($item) {
-                return $item->setCount($item->getCount() * 2); }, $event->getDrops())) : $event->setDrops([]);
+            if(rand(0, 1)) {
+                $event->setDrops(array_map(function ($item) {
+                    return $item->setCount($item->getCount() * 2); }, $event->getDrops()));
+                $event->setXpDropAmount($event->getXpDropAmount() * 2);
+            } else {
+                $event->setDrops([]);
+                $event->setXpDropAmount(0);
+            }
         }
     }
 }

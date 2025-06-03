@@ -9,30 +9,30 @@ I am in charge of developing all the UHC game modes of the server, and here is t
 
 ### Scenario todo list :
 
-- [x] Final Heal 
+- [ ] Final Heal 
 - [ ] Cat Eyes 
 - [x] Vanilla + 
-- [x] Timber
+- [ ] Timber
 - [x] Hastey Boys 
 - [x] Blood Enchant 
 - [ ] Blood Fusion 
 - [ ] Bookception 
-- [x] Anonymous 
+- [ ] Anonymous 
 - [ ] Assault and Battery 
 - [x] Auto Break 
 - [ ] Barebones 
 - [x] Blood Diamond 
-- [x] Bow See 
-- [x] No Clean Up 
+- [ ] Bow See 
+- [ ] No Clean Up 
 - [ ] Blood Fusion
 - [ ] Time Bomb
 - [x] Cut Clean 
-- [x] Fast Getaway 
-- [x] Long Shot 
+- [ ] Fast Getaway 
+- [ ] Long Shot 
 - [x] Double or Nothing 
 - [ ] Blocked 
 - [ ] Bench Blitz
-- [x] Damage Cycle 
+- [ ] Damage Cycle 
 - [ ] Blood Fusion
 - [ ] Sky High 
 - [ ] Vein Miner 

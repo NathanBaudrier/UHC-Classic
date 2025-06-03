@@ -18,30 +18,30 @@ class ParanoiaScenario extends Scenario {
     }
 
     public function getName() : string {
-        return "ParanoiaScenario";
+        return "Paranoia";
     }
 
     public function getDescription() : string {
-        return "ParanoiaScenario";
+        return "Paranoia";
     }
 
     public function onEvent(Event $event) : void {
         if($event instanceof UPlayerDeathEvent) {
             if(($killer = $event->getKiller()) != null) {
                 $player = $event->getPlayer();
-                $player->getServer()->broadcastMessage($killer->getName() . " a tué " . $player->getName() . " aux coordonnées : " . $killer->getPosition()->getX() . ":" . $killer->getPosition()->getY() . ":" . $killer->getPosition()->getZ());
+                $player->getServer()->broadcastMessage($killer->getName() . " a tué " . $player->getName() . " aux coordonnées : " . round($killer->getPosition()->getX()) . ":" . round($killer->getPosition()->getY()) . ":" . round($killer->getPosition()->getZ()));
             }
         } else if($event instanceof PlayerItemConsumeEvent) {
             if(($item = $event->getItem()) instanceof GoldenApple) {
                 $player = $event->getPlayer();
-                $player->getServer()->broadcastMessage($player->getName() . " a mangé " . $item->getName() . " aux coordonnées : " . $player->getPosition()->getX() . ":" . $player->getPosition()->getY() . ":" . $player->getPosition()->getZ());
+                $player->getServer()->broadcastMessage($player->getName() . " a mangé " . $item->getName() . " aux coordonnées : " . round($player->getPosition()->getX()) . ":" . round($player->getPosition()->getY()) . ":" . round($player->getPosition()->getZ()));
             }
         } else if($event instanceof BlockBreakEvent) {
             $block = $event->getBlock();
 
             if($block instanceof GoldOre || $block instanceof DiamondOre) {
                 $player = $event->getPlayer();
-                $player->getServer()->broadcastMessage($player->getName() . " a miné " . $block->getName() . " aux coordonnées : " . $player->getPosition()->getX() . ":" . $player->getPosition()->getY() . ":" . $player->getPosition()->getZ());
+                $player->getServer()->broadcastMessage($player->getName() . " a miné " . $block->getName() . " aux coordonnées : " . round($player->getPosition()->getX()) . ":" . round($player->getPosition()->getY()) . ":" . round($player->getPosition()->getZ()));
             }
         }
     }

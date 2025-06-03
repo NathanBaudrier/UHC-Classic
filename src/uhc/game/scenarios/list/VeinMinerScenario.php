@@ -35,6 +35,6 @@ class VeinMinerScenario extends Scenario {
             BlockTypeIds::DIAMOND_ORE,
         ];
 
-        if(in_array($block->getTypeId(), $validOres)) Utils::mineConnectedBlocks($block, $block->getTypeId());
+        //if(in_array($block->getTypeId(), $validOres)) Utils::mineConnectedBlocks($block, $block->getTypeId());
     }
 }

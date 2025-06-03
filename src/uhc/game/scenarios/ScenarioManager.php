@@ -8,6 +8,7 @@ use uhc\game\scenarios\list\BowSwapScenario;
 use uhc\game\scenarios\list\CrippleScenario;
 use uhc\game\scenarios\list\CutCleanScenario;
 use uhc\game\scenarios\list\DamageCycleScenario;
+use uhc\game\scenarios\list\DoubleOrNothingScenario;
 use uhc\game\scenarios\list\FastGatewayScenario;
 use uhc\game\scenarios\list\FinalHealScenario;
 use uhc\game\scenarios\list\HasteyBoysScenario;
@@ -49,6 +50,7 @@ class ScenarioManager implements ScenarioIds {
         $this->scenarios[] = new BowSwapScenario();
         $this->scenarios[] = new FastGatewayScenario();
         $this->scenarios[] = new LongShotScenario();
+        $this->scenarios[] = new DoubleOrNothingScenario();
         //Blocked
         //BenchBlitz
         $this->scenarios[] = new DamageCycleScenario();

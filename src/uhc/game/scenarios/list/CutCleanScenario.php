@@ -7,6 +7,7 @@ use pocketmine\block\IronOre;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Event;
 use pocketmine\item\VanillaItems;
+use pocketmine\player\GameMode;
 use uhc\game\scenarios\Scenario;
 
 class CutCleanScenario extends Scenario {
@@ -25,6 +26,7 @@ class CutCleanScenario extends Scenario {
 
     public function onEvent(Event $event) : void {
         if(!$event instanceof BlockBreakEvent) return;
+        if($event->getPlayer()->getGamemode() !== GameMode::SURVIVAL()) return;
 
         $block = $event->getBlock();
         if($block instanceof IronOre) {

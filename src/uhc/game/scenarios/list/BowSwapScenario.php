@@ -4,6 +4,8 @@ namespace uhc\game\scenarios\list;
 
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\Event;
+use pocketmine\player\GameMode;
+
 use uhc\game\scenarios\Scenario;
 use uhc\UPlayer;
 
@@ -28,6 +30,7 @@ class BowSwapScenario extends Scenario {
         $target = $event->getEntity();
 
         if(!$shooter instanceof UPlayer || !$target instanceof UPlayer) return;
+        if(!$shooter->getGamemode() == GameMode::SURVIVAL() || !$target->getGamemode() == GameMode::SURVIVAL()) return;
 
         $position = $target->getPosition();
         $target->teleport($shooter->getPosition());
