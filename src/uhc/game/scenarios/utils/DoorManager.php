@@ -1,6 +1,6 @@
 <?php
 
-namespace uhc\game\scenarios\manager;
+namespace uhc\game\scenarios\utils;
 
 use pocketmine\block\Door;
 

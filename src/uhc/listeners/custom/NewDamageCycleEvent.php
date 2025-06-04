@@ -3,7 +3,7 @@
 namespace uhc\listeners\custom;
 
 use pocketmine\event\Event;
-use uhc\game\scenarios\DamageCycle;
+use uhc\game\scenarios\utils\DamageCycle;
 
 class NewDamageCycleEvent extends Event {
 

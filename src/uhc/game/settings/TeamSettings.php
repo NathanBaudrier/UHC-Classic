@@ -2,7 +2,7 @@
 
 namespace uhc\game\settings;
 
-class Teams {
+class TeamSettings {
 
     private int $amount = 0;
     private bool $random = false;

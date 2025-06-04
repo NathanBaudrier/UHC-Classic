@@ -50,6 +50,8 @@ class HasteyBoysScenario extends Scenario {
                         }
                     }
 
+                    //Test if it works with a lot of pickaxes
+
                     break;
                 }
             }

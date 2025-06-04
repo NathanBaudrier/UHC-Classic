@@ -5,13 +5,13 @@ namespace uhc\game;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Vector3;
 use pocketmine\player\GameMode;
-use pocketmine\utils\TextFormat;
 use pocketmine\world\format\Chunk;
-use uhc\game\scenarios\DamageCycle;
-use uhc\game\scenarios\manager\DoorManager;
 use uhc\game\scenarios\ScenarioManager;
-use uhc\game\settings\Border;
+use uhc\game\scenarios\utils\DamageCycle;
+use uhc\game\scenarios\utils\DoorManager;
+use uhc\game\settings\BorderSettings;
 use uhc\game\team\TeamManager;
+use uhc\listeners\custom\GameStartedEvent;
 use uhc\Main;
 use uhc\tasks\UpdateTimeTask;
 use uhc\UPlayer;
@@ -28,7 +28,7 @@ class Game {
      */
     private array $players = [];
     private int $maxPlayers = 30;
-    private Border $border;
+    private BorderSettings $border;
     private TeamManager $teams;
     private ScenarioManager $scenarios;
     private Time $pvpTime;
@@ -40,7 +40,7 @@ class Game {
     public function __construct(Main $main) {
         $this->main = $main;
         $this->duration = new Time();
-        $this->border = new Border();
+        $this->border = new BorderSettings();
         $this->teams = new TeamManager();
         $this->scenarios = new ScenarioManager();
         $this->pvpTime = new Time(0, 20);
@@ -54,6 +54,8 @@ class Game {
 
     public function start() : void {
         $this->started = true;
+
+        (new GameStartedEvent($this))->call();
 
         $this->main->getScheduler()->scheduleRepeatingTask(new UpdateTimeTask($this), 20);
         //TODO
@@ -148,7 +150,7 @@ class Game {
         $this->maxPlayers = $maxPlayers;
     }
 
-    public function getBorder() : Border {
+    public function getBorder() : BorderSettings {
         return $this->border;
     }
 
@@ -165,7 +167,6 @@ class Game {
     }
 
     private function doRandomTeam() : void {
-        $max = $this->teams->getAmount();
         //TODO
     }
 

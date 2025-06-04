@@ -2,7 +2,7 @@
 
 namespace uhc\game\settings;
 
-class Border {
+class BorderSettings {
 
     private int $initialSize = 1500;
     private int $finalSize = 350;

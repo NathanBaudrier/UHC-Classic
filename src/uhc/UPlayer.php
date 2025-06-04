@@ -6,6 +6,7 @@ use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetScorePacket;
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use pocketmine\player\Player;
+use uhc\game\scenarios\utils\Power;
 use uhc\game\team\Team;
 use uhc\items\ConfigItem;
 use uhc\libs\scoreboard\Scoreboard;
@@ -19,7 +20,7 @@ class UPlayer extends Player {
 
     private ?DisconnectTask $disconnectTask = null;
 
-    private ?int $power = null;
+    private ?Power $power = null;
 
     public function isOp() : bool {
         return $this->getServer()->isOp($this->getName());
@@ -114,11 +115,11 @@ class UPlayer extends Player {
         $this->disconnectTask?->getHandler()->cancel();
     }
 
-    public function getPower() : ?int {
+    public function getPower() : ?Power {
         return $this->power;
     }
 
-    public function setPower(int $power) : void {
+    public function setPower(Power $power) : void {
         $this->power = $power;
     }
 }
