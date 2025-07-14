@@ -71,7 +71,6 @@ class UPlayer extends Player {
             $scorePacket = new SetScorePacket();
             $scorePacket->type = SetScorePacket::TYPE_CHANGE;
 
-            var_dump($this->scoreboard->getLines());
             foreach ($this->scoreboard->getLines() as $index => $line) {
                 $entry = new ScorePacketEntry();
                 $entry->objectiveName = $this->scoreboard->getObjectiveName();
