@@ -8,16 +8,24 @@ use pocketmine\player\Player;
 class Utils {
 
     /**
-     * @param Player $player
      * @param Block $from
      * @param int $blockId
+     * @param Player|null $player
      * @return void
      */
-    public static function mineConnectedBlocks(Player $player, Block $from, int $blockId) : void {
-        self::_mineConnectedBlocks($player, $from, $blockId);
+    public static function mineConnectedBlocks(Block $from, int $blockId, Player $player = null) : void {
+        self::_mineConnectedBlocks($from, $blockId, $player);
     }
 
-    private static function _mineConnectedBlocks(Player $player, Block $block, int $blockId, array &$visited = [], int $count = 0) : void {
+    /**
+     * @param Block $block
+     * @param int $blockId
+     * @param Player|null $player
+     * @param array $visited
+     * @param int $count
+     * @return void
+     */
+    private static function _mineConnectedBlocks(Block $block, int $blockId, Player $player = null, array &$visited = [], int $count = 0) : void {
         if($block->getTypeId() != $blockId) return;
         if($count > 50) return;
 
@@ -42,7 +50,7 @@ class Utils {
                 ] as [$dx, $dy, $dz]) {
             $nextPos = $position->add($dx, $dy, $dz);
             $nextBlock = $world->getBlock($nextPos);
-            self::_mineConnectedBlocks($player, $nextBlock, $blockId, $visited, $count + 1);
+            self::_mineConnectedBlocks($nextBlock, $blockId, $player, $visited, $count + 1);
         }
     }
 }

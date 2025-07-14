@@ -5,6 +5,7 @@ namespace uhc\game\scenarios\list;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Event;
+use pocketmine\item\VanillaItems;
 use uhc\game\scenarios\Scenario;
 use uhc\utils\Utils;
 
@@ -26,10 +27,10 @@ class TimberScenario extends Scenario {
         if(!$event instanceof BlockBreakEvent) return;
 
         $block = $event->getBlock();
-        /*
-        if($block->getTypeId() == BlockTypeIds::OAK_WOOD || $block->getTypeId() == BlockTypeIds::BIRCH_WOOD) {
+
+        if($block->getTypeId() == BlockTypeIds::OAK_LOG || $block->getTypeId() == BlockTypeIds::BIRCH_LOG) {
             Utils::mineConnectedBlocks($block, $block->getTypeId());
+            $event->setDrops([]);
         }
-        */
     }
 }
