@@ -9,6 +9,7 @@ use pocketmine\event\Event;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\GameMode;
 use uhc\game\scenarios\Scenario;
+use uhc\Main;
 
 class CutCleanScenario extends Scenario {
 
@@ -29,6 +30,16 @@ class CutCleanScenario extends Scenario {
         if($event->getPlayer()->getGamemode() !== GameMode::SURVIVAL()) return;
 
         $block = $event->getBlock();
+        if(
+            Main::getInstance()->getGame()->getScenarios()->getById(self::VEIN_MINER_ID)->isEnabled() &&
+            !$event->getItem()->equals(VanillaItems::AIR()) &&
+            $block instanceof IronOre ||
+            $block instanceof GoldOre
+        ) {
+            $event->setDrops([]);
+            return;
+        }
+
         if($block instanceof IronOre) {
             $event->setDrops([VanillaItems::IRON_INGOT()]);
             $event->setXpDropAmount(1);

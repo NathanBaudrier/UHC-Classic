@@ -5,6 +5,7 @@ namespace uhc\game\scenarios\list;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Event;
+use pocketmine\item\VanillaItems;
 use uhc\game\scenarios\Scenario;
 use uhc\utils\Utils;
 
@@ -35,6 +36,8 @@ class VeinMinerScenario extends Scenario {
             BlockTypeIds::DIAMOND_ORE,
         ];
 
-        //if(in_array($block->getTypeId(), $validOres)) Utils::mineConnectedBlocks($block, $block->getTypeId());
+        if(in_array($block->getTypeId(), $validOres) && !$event->getItem()->equals(VanillaItems::AIR())) {
+            Utils::mineConnectedBlocks($event->getPlayer(), $block, $block->getTypeId());
+        }
     }
 }
