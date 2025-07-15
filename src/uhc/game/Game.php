@@ -6,11 +6,14 @@ use pocketmine\block\VanillaBlocks;
 use pocketmine\math\Vector3;
 use pocketmine\player\GameMode;
 use pocketmine\world\format\Chunk;
+use uhc\game\border\Border;
 use uhc\game\scenarios\ScenarioManager;
 use uhc\game\scenarios\utils\DamageCycle;
 use uhc\game\scenarios\utils\DoorManager;
 use uhc\game\settings\BorderSettings;
-use uhc\game\team\TeamManager;
+use uhc\game\settings\Settings;
+use uhc\game\settings\TeamSettings;
+use uhc\game\teams\TeamManager;
 use uhc\listeners\custom\GameStartedEvent;
 use uhc\Main;
 use uhc\tasks\UpdateTimeTask;
@@ -28,8 +31,8 @@ class Game {
      */
     private array $players = [];
     private int $maxPlayers = 30;
-    private BorderSettings $border;
     private TeamManager $teams;
+    private Border $border;
     private ScenarioManager $scenarios;
     private Time $pvpTime;
     private array $starterKit = [];
@@ -39,13 +42,25 @@ class Game {
 
     public function __construct(Main $main) {
         $this->main = $main;
+        $this->teams = new TeamManager(TeamSettings::Default());
+        $this->border = new Border(new BorderSettings());
         $this->duration = new Time();
-        $this->border = new BorderSettings();
-        $this->teams = new TeamManager();
         $this->scenarios = new ScenarioManager();
         $this->pvpTime = new Time(0, 20);
 
         $this->doors = new DoorManager();
+    }
+
+    public function getTeams() : ?TeamManager {
+        return $this->teams;
+    }
+
+    public function getBorder() : ?Border {
+        return $this->border;
+    }
+
+    public function getScenarios() : ScenarioManager {
+        return $this->scenarios;
     }
 
     public function hasStarted() : bool {
@@ -59,7 +74,7 @@ class Game {
 
         $this->main->getScheduler()->scheduleRepeatingTask(new UpdateTimeTask($this), 20);
         //TODO
-        if($this->teams->areRandom()) {
+        if($this->teams->getSettings()->areRandomTeams()) {
             //Do random team
         }
 
@@ -148,18 +163,6 @@ class Game {
 
     public function setMaxPlayers(int $maxPlayers) : void {
         $this->maxPlayers = $maxPlayers;
-    }
-
-    public function getBorder() : BorderSettings {
-        return $this->border;
-    }
-
-    public function getTeams() : TeamManager {
-        return $this->teams;
-    }
-
-    public function getScenarios() : ScenarioManager {
-        return $this->scenarios;
     }
 
     public function getPvpTime() : Time {
