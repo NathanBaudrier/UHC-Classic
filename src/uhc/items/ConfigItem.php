@@ -10,8 +10,8 @@ use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use uhc\game\Game;
-use uhc\game\scenarios\ScenarioIds;
-use uhc\game\team\TeamManager;
+use uhc\game\settings\BorderSettings;
+use uhc\game\settings\TeamSettings;
 use uhc\libs\form\CustomForm;
 use uhc\libs\form\SimpleForm;
 use uhc\Main;
@@ -42,7 +42,8 @@ class ConfigItem extends Item {
 
     private function sendMenuConfigForm(UPlayer $player) : void {
         $form = new SimpleForm(function (UPlayer $player, $data) {
-            if ($data === null) return;
+            if(!isset($data)) return;
+
             switch ($data) {
                 case 0:
                     $this->sendSettingsForm($player);
@@ -71,43 +72,100 @@ class ConfigItem extends Item {
 
     private function sendSettingsForm(UPlayer $player) : void {
         $form = new SimpleForm(function (UPlayer $player, $data) {
-            if($data === null) return;
+            if(!isset($data)) {
+                $this->sendMenuConfigForm($player);
+                return;
+            }
+
+            switch($data) {
+                case 0:
+                    $this->sendBorderSettingsForm($player);
+                    break;
+
+                case 1:
+                    $this->game->getTeams()->getSettings()->areEnabled() ? $this->sendTeamSettingsForm($player) : $this->sendEnabledTeamsForm($player);
+                    break;
+            }
         });
 
         $form->setTitle(TextFormat::YELLOW . "Paramètres de la partie");
         $form->setContent(TextFormat::YELLOW . "Choisissez un paramètres à configurer :");
         $form->addButton("Bordure");
         $form->addButton("Equipes");
-        $form->addButton("Limites");
 
         $player->sendForm($form);
     }
 
-    private function sendTeamsForm(UPlayer $player) : void {
-        $form = new CustomForm(function (UPlayer $player, $data) {
-            if(count($data) === 0) {
+    private function sendEnabledTeamsForm(UPlayer $player) : void {
+        $form = new SimpleForm(function (UPlayer $player, $data) {
+            if(!isset($data) || $data == 1) {
                 $this->sendSettingsForm($player);
                 return;
             }
 
-            $teams = $this->game->getTeams();
+            $settings = $this->game->getTeams()->getSettings();
+            $this->game->getTeams()->changeSettings(new TeamSettings(true, $settings->getNumberOfEnabledTeams(), $settings->getMaxPlayersPerTeam(), $settings->areRandomTeams()));
 
-            if(!$teams->setNumberOfEnabledTeams($data[0])) {
-                $player->sendMessage("Nomnre d'équipe invalide.");
+            $this->sendTeamSettingsForm($player);
+        });
+
+        $form->setTitle("Paramètres des équipes");
+        $form->setContent("Voulez-vous activer les équipes ?");
+        $form->addButton("Oui");
+        $form->addButton("Non");
+
+        $player->sendForm($form);
+    }
+
+    private function sendBorderSettingsForm(UPlayer $player) : void {
+        $form = new CustomForm(function (UPlayer $player, $data) {
+            if(!isset($data)) {
+                $this->sendSettingsForm($player);
                 return;
             }
 
-            if(!$teams->setMaxPlayersPerTeam($data[1])) {
-                $player->sendMessage("Nombre de joueur maximum par équipe invalide.");
+            if($data[0] > $data[1]) {
+                $player->sendMessage(TextFormat::RED . "La taille initiale doit être inférieure à la taille finale.");
+                return;
             }
 
-            //Random teams part
+            $this->game->getBorder()->changeSettings(new BorderSettings($data[0], $data[1], $data[2]));
         });
 
-        $form->setTitle("Paramètre des équipes Equipes");
-        $form->addSlider("Nombre d'équipes :", TeamManager::getMinTeamsBasedOnOnlinePlayers(), TeamManager::getMaxTeamsBasedOnOnlinePlayers());
-        $form->addSlider("Nombre maximum de joueurs par équipes :", TeamManager::MIN_TEAMS, TeamManager::MAX_TEAMS);
-        $form->addDropdown("Equipes aléatoires :", ["OFF", "ON"], 0);
+        $form->setTitle(TextFormat::YELLOW . "Paramètres de la bordure");
+
+        $settings = $this->game->getBorder()->getSettings();
+        $form->addSlider("Taille initiale : ", 500, 3000, -1, $settings->getInitialSize());
+        $form->addSlider("Taille finale : ", 1000, 5000, -1, $settings->getFinalSize());
+        $form->addSlider("Vitesse : ", 20, 50, -1, $settings->getSpeed());
+
+        $player->sendForm($form);
+    }
+
+    private function sendTeamSettingsForm(UPlayer $player) : void {
+        $form = new CustomForm(function (UPlayer $player, $data) {
+            if(!isset($data)) {
+                $this->sendSettingsForm($player);
+                return;
+            }
+
+
+            if($data[1] * $data[2] < Main::getInstance()->getServer()->getMaxPlayers()) {
+                $player->sendMessage(TextFormat::RED . "Il n'y a pas assez de capacité pour tous les joueurs si la partie est totalement occupée.");
+                return;
+            }
+
+            $this->game->getTeams()->changeSettings(new TeamSettings(!$data[0], $data[1], $data[2], $data[3]));
+
+        });
+
+        $form->setTitle(TextFormat::YELLOW . "Paramètres des équipes");
+
+        $settings = $this->game->getTeams()->getSettings();
+        $form->addToggle("Disable teams", !$settings->areEnabled());
+        $form->addSlider("Nombre d'équipes : ", $settings::MIN_TEAMS, $settings::MAX_TEAMS, -1, $settings->getNumberOfEnabledTeams());
+        $form->addSlider("Nombre de joueurs par équipe : ", $settings::MIN_PLAYERS, $settings::MAX_PLAYERS, -1, $settings->getMaxPlayersPerTeam());
+        $form->addToggle("Aléatoire ? ", $this->game->getTeams()->getSettings()->areRandomTeams());
 
         $player->sendForm($form);
     }
@@ -118,7 +176,7 @@ class ConfigItem extends Item {
 
             $scenario = $this->game->getScenarios()->getById($data);
 
-            if($scenario->getId() == ScenarioIds::ASSAULT_AND_BATTERY_ID) {
+            if($scenario->getId() == $scenario::ASSAULT_AND_BATTERY_ID) {
                 $player->sendMessage("Ce scénario ne peut être activé que si des équipes de 2 uniquement sont activées.");
                 return;
             }
