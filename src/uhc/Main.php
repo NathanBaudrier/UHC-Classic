@@ -4,6 +4,7 @@ namespace uhc;
 
 use pocketmine\plugin\PluginBase;
 use uhc\game\Game;
+use uhc\listeners\GameListeners;
 use uhc\listeners\PlayerListeners;
 use uhc\listeners\ScenarioListeners;
 
@@ -16,8 +17,15 @@ class Main extends PluginBase {
         self::$instance = $this;
         $this->game = new Game($this);
 
-        $this->getServer()->getPluginManager()->registerEvents(new PlayerListeners($this->game), $this);
-        $this->getServer()->getPluginManager()->registerEvents(new ScenarioListeners($this->game), $this);
+        $events = [
+            new PlayerListeners($this),
+            new ScenarioListeners($this),
+            new GameListeners($this)
+        ];
+
+        foreach($events as $event) {
+            $this->getServer()->getPluginManager()->registerEvents($event, $this);
+        }
     }
 
     public static function getInstance() : self {
