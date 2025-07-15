@@ -4,14 +4,14 @@ namespace uhc\game\settings;
 
 class BorderSettings {
 
-    private int $initialSize = 1500;
-    private int $finalSize = 350;
-    private int $speed = 20;
+    private int $initialSize;
+    private int $finalSize;
+    private int $speed;
 
-    private int $size;
-
-    public function __construct() {
-        $this->size = $this->initialSize;
+    public function __construct(int $initialSize = 1500, int $finalSize = 350, int $speed = 20) {
+        $this->initialSize = $initialSize;
+        $this->finalSize = $finalSize;
+        $this->speed = $speed;
     }
 
     public function getInitialSize() : int {
@@ -36,13 +36,5 @@ class BorderSettings {
 
     public function setSpeed(int $speed) : void {
         $this->speed = $speed;
-    }
-
-    public function getCurrentSize() : int {
-        return $this->size;
-    }
-
-    public function setCurrentSize(int $size) : void {
-        $this->size = $size;
     }
 }

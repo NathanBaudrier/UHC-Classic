@@ -1,24 +1,24 @@
 <?php
 
-namespace uhc\game\team;
+namespace uhc\game\teams;
 
 use pocketmine\utils\TextFormat;
+use uhc\game\settings\TeamSettings;
+use uhc\listeners\custom\TeamSettingsChangedEvent;
 use uhc\Main;
 
 class TeamManager implements TeamIds {
 
-    public const int MIN_TEAMS = 2;
-    public const int MAX_TEAMS = 16;
-    public const int MIN_PLAYERS = 2;
-    public const int MAX_PLAYERS = 5;
+    private TeamSettings $settings;
 
     /**
      * @var Team[]
      */
     private array $teams = [];
-    private bool $random = false;
 
-    public function __construct() {
+    public function __construct(TeamSettings $settings) {
+        $this->settings = $settings;
+
         $this->init();
     }
 
@@ -41,8 +41,40 @@ class TeamManager implements TeamIds {
         $this->teams[] = new Team(self::BLACK, "Black", TextFormat::BLACK, "blocks/concrete_black.png");
     }
 
+    public function getSettings() : TeamSettings {
+        return $this->settings;
+    }
+
+    public function changeSettings(TeamSettings $newSettings) : void {
+        (new TeamSettingsChangedEvent($this->settings, $newSettings))->call();
+
+        $this->settings = $newSettings;
+
+        for($i = 0; $i < count($this->teams); $i++) {
+            if($newSettings->areEnabled()) {
+                $this->teams[$i]->setSize($newSettings->getMaxPlayersPerTeam());
+
+                if($i < $newSettings->getNumberOfEnabledTeams()) {
+                    $this->teams[$i]->enable();
+                } else {
+                    $this->teams[$i]->disable();
+                }
+
+                while(count($this->teams[$i]->getMembers()) > $this->teams[$i]->getSize()) {
+                    $this->teams[$i]->removeMember($this->teams[$i]->getMembers()[array_rand($this->teams[$i]->getMembers())]);
+                }
+            } else {
+                $this->teams[$i]->disable();
+            }
+        }
+    }
+
     public function getTeams() : array {
         return $this->teams;
+    }
+
+    public function areEnabled() : bool {
+        return $this->settings->getNumberOfEnabledTeams() > 1;
     }
 
     public function getEnabledTeams() : array {
@@ -54,71 +86,11 @@ class TeamManager implements TeamIds {
         return $enabledTeams;
     }
 
-    public function getNumberOfEnabledTeams() : int {
-        return count($this->getEnabledTeams());
-    }
-
-    public function setNumberOfEnabledTeams(int $enabledTeams) : void {
-        if($enabledTeams < self::MIN_TEAMS || $enabledTeams > self::MAX_TEAMS) return;
-        $this->disableTeams();
-
-        for($i = 0; $i < $enabledTeams; $i++) {
-            $this->teams[$i]->enable();
-        }
-    }
-
-    public function getMaxPlayersPerTeam() : int {
-        return $this->maxPlayersPerTeam;
-    }
-
-    public function setMaxPlayersPerTeam(int $maxPlayersPerTeam) : void {
-        if($maxPlayersPerTeam < self::MIN_PLAYERS || $maxPlayersPerTeam > self::MAX_PLAYERS) return;
-
-        foreach($this->teams as $team) {
-            $team->setSize($maxPlayersPerTeam);
-        }
-    }
-
-    private function disableTeams() : void {
-        foreach ($this->teams as $team) {
-            $team->disable();
-        }
-    }
-
-    public function areRandom() : bool {
-        return $this->random;
-    }
-
-    public function setRandom(bool $value = true) : void {
-        $this->random = $value;
-    }
-
     public function getTeamById(int $id) : ?Team {
         foreach($this->teams as $team) {
             if ($team->getId() === $id) return $team;
         }
 
         return null;
-    }
-
-    /**
-     * @return Team[]
-     */
-    public function getEnabledTeams() : array {
-        $enabledTeams = [];
-
-        foreach($this->teams as $team) {
-            if ($team->isEnabled()) $enabledTeams[] = $team;
-        }
-
-        return $enabledTeams;
-    }
-
-    public static function getMinTeamsBasedOnOnlinePlayers() : int {
-        return round(count(Main::getInstance()->getServer()->getOnlinePlayers()) / self::MAX_PLAYERS);
-    }
-
-    public static function getMaxTeamsBasedOnOnlinePlayers() : int {
-        return round(count(Main::getInstance()->getServer()->getOnlinePlayers()) / self::MIN_PLAYERS);
     }
 }

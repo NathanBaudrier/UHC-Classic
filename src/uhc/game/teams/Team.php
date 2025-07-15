@@ -1,6 +1,6 @@
 <?php
 
-namespace uhc\game\team;
+namespace uhc\game\teams;
 
 use uhc\Main;
 use uhc\UPlayer;
@@ -78,6 +78,7 @@ class Team {
 
     public function disable() : void {
         $this->enabled = false;
+        $this->members = [];
     }
 
 }

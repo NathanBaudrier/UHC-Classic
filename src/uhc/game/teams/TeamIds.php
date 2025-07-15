@@ -1,6 +1,6 @@
 <?php
 
-namespace uhc\game\team;
+namespace uhc\game\teams;
 
 interface TeamIds {
 
