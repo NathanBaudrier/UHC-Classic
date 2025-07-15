@@ -2,7 +2,6 @@
 
 namespace uhc\listeners;
 
-use pocketmine\entity\Skin;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -14,7 +13,6 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
-use uhc\game\Game;
 use uhc\game\scenarios\ScenarioIds;
 use uhc\libs\scoreboard\Scoreboard;
 use uhc\listeners\custom\PvpEnabledEvent;
@@ -24,21 +22,21 @@ use uhc\UPlayer;
 
 class PlayerListeners implements Listener {
 
-    private Game $game;
+    private Main $main;
 
-    public function __construct(Game $game) {
-        $this->game = $game;
+    public function __construct(Main $main) {
+        $this->main = $main;
     }
 
     public function onJoin(PlayerJoinEvent $event) : void {
         $player = $event->getPlayer();
-        $game = $this->game;
+        $game = $this->main->getGame();
 
         if($player instanceof UPlayer) {
 
-            if(!$this->game->hasStarted()) {
+            if(!$game->hasStarted()) {
                 $scoreboard = new Scoreboard("UHC Classic", "welcome_scoreboard");
-                $this->game->addPlayer($player);
+                $game->addPlayer($player);
                 /*$player->isHost() ||*/ $player->getServer()->isOp($player->getName()) ? $player->sendHostInventory() : $player->sendGuessInventory();
 
                 $scoreboard->addLine(0, "+---------+");
@@ -61,7 +59,7 @@ class PlayerListeners implements Listener {
 
                 $scoreboard = new Scoreboard("UHC Classic", "game_scoreboard");
                 $scoreboard->addLine(0, "+--------------+");
-                $scoreboard->addLine(1, "Timer : " . $this->game->getDuration()->getFormat());
+                $scoreboard->addLine(1, "Timer : " . $game->getDuration()->getFormat());
                 $scoreboard->addLine(2, "BorderSettings : ");
                 $scoreboard->addLine(3, "Pvp : " /*TODO*/);
                 //if($this->game->getTeams()->areEnabled()) $scoreboard->addLine(4, "Team : " . $player->getTeam()->getName());
@@ -77,7 +75,7 @@ class PlayerListeners implements Listener {
 
     public function onQuit(PlayerQuitEvent $event) : void {
         $player = $event->getPlayer();
-        $game = $this->game;
+        $game = $this->main->getGame();
 
         if($player instanceof UPlayer) {
             if($game->hasStarted()) {
@@ -92,7 +90,7 @@ class PlayerListeners implements Listener {
         $player = $event->getTransaction()->getSource();
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
+            if(!$this->main->getGame()->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
                 $event->cancel();
             }
         }
@@ -102,7 +100,7 @@ class PlayerListeners implements Listener {
         $player = $event->getPlayer();
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
+            if(!$this->main->getGame()->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
                 $event->cancel();
             }
         }
@@ -112,7 +110,7 @@ class PlayerListeners implements Listener {
         $player = $event->getEntity();
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
+            if(!$this->main->getGame()->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
                 $event->cancel();
             }
         }
@@ -137,18 +135,19 @@ class PlayerListeners implements Listener {
         $player = $event->getPlayer();
 
         if($player instanceof UPlayer) {
-            if(!$this->game->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
+            if(!$this->main->getGame()->hasStarted() /* && !$player->isHost()*/ && !$player->isOp()) {
                 $event->cancel();
             }
         }
     }
 
     public function onPvp(PvpEnabledEvent $event) : void {
-        Server::getInstance()->broadcastMessage("The pvp is now enabled !");
+        $this->main->getServer()->broadcastMessage("The pvp is now enabled !");
 
-        if($this->game->getScenarios()->getById(ScenarioIds::FINAL_HEAL_ID)->isEnabled()) {
+        $game = $this->main->getGame();
+        if($game->getScenarios()->getById(ScenarioIds::FINAL_HEAL_ID)->isEnabled()) {
             Server::getInstance()->broadcastMessage("+ Final Heal");
-            foreach($this->game->getPlayers() as $player) {
+            foreach($game->getPlayers() as $player) {
                 $player->setHealth($player->getMaxHealth());
             }
         }

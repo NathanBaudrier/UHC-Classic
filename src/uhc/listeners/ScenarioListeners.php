@@ -8,22 +8,21 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\Event;
 use pocketmine\event\inventory\CraftItemEvent;
-use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerItemConsumeEvent;
 use pocketmine\event\player\PlayerItemEnchantEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerMoveEvent;
-use uhc\game\Game;
 use uhc\listeners\custom\NewDamageCycleEvent;
 use uhc\listeners\custom\UPlayerDeathEvent;
+use uhc\Main;
 
 class ScenarioListeners implements Listener {
 
-    private Game $game;
+    private Main $main;
 
-    public function __construct(Game $game) {
-        $this->game = $game;
+    public function __construct(Main $main) {
+        $this->main = $main;
     }
 
     public function onCraft(CraftItemEvent $event) : void {
@@ -71,7 +70,7 @@ class ScenarioListeners implements Listener {
     }
 
     private function handleScenarioEvents(Event $event) : void {
-        if(!($game = $this->game)->hasStarted()) return;
+        if(!($game = $this->main->getGame())->hasStarted()) return;
 
         foreach($game->getScenarios()->getAll() as $scenario) {
             if($scenario->isEnabled()) $scenario->onEvent($event);
