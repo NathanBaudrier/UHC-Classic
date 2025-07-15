@@ -16,8 +16,6 @@ class TeamManager implements TeamIds {
      * @var Team[]
      */
     private array $teams = [];
-    private int $enabledTeams = 0;
-    private int $maxPlayersPerTeam = 2;
     private bool $random = false;
 
     public function __construct() {
@@ -47,33 +45,41 @@ class TeamManager implements TeamIds {
         return $this->teams;
     }
 
-    public function getNumberOfEnabledTeams() : int {
-        return $this->enabledTeams;
+    public function getEnabledTeams() : array {
+        $enabledTeams = [];
+        foreach($this->teams as $team) {
+            if($team->isEnabled()) $enabledTeams[] = $team;
+        }
+
+        return $enabledTeams;
     }
 
-    public function setNumberOfEnabledTeams(int $enabledTeams) : bool {
-        if($enabledTeams < self::MIN_TEAMS || $enabledTeams > self::MAX_TEAMS) return false;
+    public function getNumberOfEnabledTeams() : int {
+        return count($this->getEnabledTeams());
+    }
+
+    public function setNumberOfEnabledTeams(int $enabledTeams) : void {
+        if($enabledTeams < self::MIN_TEAMS || $enabledTeams > self::MAX_TEAMS) return;
         $this->disableTeams();
 
         for($i = 0; $i < $enabledTeams; $i++) {
             $this->teams[$i]->enable();
         }
-
-        return true;
     }
 
     public function getMaxPlayersPerTeam() : int {
         return $this->maxPlayersPerTeam;
     }
 
-    public function setMaxPlayersPerTeam(int $maxPlayersPerTeam) : bool {
-        if($maxPlayersPerTeam < self::MIN_PLAYERS || $maxPlayersPerTeam > self::MAX_PLAYERS) return false;
+    public function setMaxPlayersPerTeam(int $maxPlayersPerTeam) : void {
+        if($maxPlayersPerTeam < self::MIN_PLAYERS || $maxPlayersPerTeam > self::MAX_PLAYERS) return;
 
-        $this->maxPlayersPerTeam = $maxPlayersPerTeam;
-        return true;
+        foreach($this->teams as $team) {
+            $team->setSize($maxPlayersPerTeam);
+        }
     }
 
-    public function disableTeams() : void {
+    private function disableTeams() : void {
         foreach ($this->teams as $team) {
             $team->disable();
         }
